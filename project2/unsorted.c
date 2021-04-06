@@ -19,8 +19,8 @@ typedef struct set {
 
 /*
     search: private function that sequentially searches through array for elt; if element is not found, return -1.
-    runtime: 
-*/
+    runtime: O(n)
+*/ 
 int search(SET *sp, char *elt) {
     assert((sp != NULL) && (elt != NULL)); // make sure both sp & elt exist
 
