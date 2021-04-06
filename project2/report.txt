@@ -1,0 +1,29 @@
+UNIQUE
+
+File Name                       Unsorted.c              Sorted.c
+------------------------------------------------------------------
+Bible.txt                       
+Genesis.txt                     
+GreenEggsAndHam.txt             
+HoundOfTheBaskervilles.txt      
+Macbeth.txt                     
+TheCountOfMonteCristo.txt       
+TheSecretGarden.txt             
+TheWarOfTheWorlds.txt           
+TreasureIsland.txt              
+TwentyThousandLeagues.txt       
+
+PARITY
+
+File Name                       Unsorted.c              Sorted.c
+------------------------------------------------------------------
+Bible.txt
+Genesis.txt
+GreenEggsAndHam.txt
+HoundOfTheBaskervilles.txt
+Macbeth.txt
+TheCountOfMonteCristo.txt
+TheSecretGarden.txt
+TheWarOfTheWorlds.txt
+TreasureIsland.txt
+TwentyThousandLeagues.txt

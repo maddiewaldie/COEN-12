@@ -1,10 +1,6 @@
 /* COEN 12 Lab #1
  * Author: Madeleine Waldie
  * Due Date: 4/18/21
- *
- * Use an unsorted array of length m > 0.
- * The first n<=m slots are used to hold n strings in arbitrary order.
- * Use sequential search to locate an element in the array.
  */
 
 # include <assert.h>
@@ -23,8 +19,9 @@ typedef struct set {
 } SET;
 
 /*
-    search: sequentially search through array for elt; if element is not found, return -1.
-    note: this is a private function
+    search: private function that sequentially searches through array for elt; if element is not found, return -1.
+    
+    runtime: O(n)
 */
 int search(SET *sp, char *elt) {
     assert((sp != NULL) && (elt != NULL)); // make sure both sp & elt exist
@@ -41,6 +38,8 @@ int search(SET *sp, char *elt) {
 
 /*
     creatsSet: return a pointer to a new set with a maximum capacity of maxElts
+
+    runtime: O(1)
 */
 SET *createSet(int maxElts) { 
     SET*sp = malloc(sizeof(SET)); // declare and allocate memory for set
@@ -56,6 +55,8 @@ SET *createSet(int maxElts) {
 
 /*
     destroySet: deallocate memory associated with the set pointed to by sp
+
+    runtime: O(n)
 */
 void destroySet(SET *sp) { 
     int i;
@@ -69,6 +70,8 @@ void destroySet(SET *sp) {
 
 /*
     numElements: return the number of elements in the set pointed to by sp
+
+    runtime: O(1)
 */
 int numElements(SET *sp) {
     return sp->count;
@@ -76,6 +79,8 @@ int numElements(SET *sp) {
 
 /*
     addElement: add elt to the set pointed to by sp
+
+    runtime: O(n)
 */
 void addElement(SET *sp, char *elt) { 
     assert((sp != NULL) && (elt != NULL) && (sp->count < MAX_SIZE)); // make sure both sp & elt exist, and that count is less than max num of elements
@@ -87,6 +92,8 @@ void addElement(SET *sp, char *elt) {
 
 /*
     removeElement: remove elt from the set pointed to by sp
+
+    runtime: O(n)
 */
 void removeElement(SET *sp, char *elt) {
     assert((sp != NULL) && (elt != NULL)); // make sure both sp & elt exist
@@ -103,6 +110,8 @@ void removeElement(SET *sp, char *elt) {
 
 /*
     findElement: if elt is present in the set pointed to by sp then return the matching element, otherwise return NULL
+
+    runtime: O(n)
 */
 char *findElement(SET *sp, char *elt) {
     assert((sp != NULL) && (elt != NULL)); // make sure both sp & elt exist
@@ -112,6 +121,8 @@ char *findElement(SET *sp, char *elt) {
 
 /*
     getElements: allocate and return an array of elements in the set pointed to by sp
+
+    runtime: O(n)
 */
 char **getElements(SET *sp) {
     assert(sp != NULL); // make sure both sp exists
