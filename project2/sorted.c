@@ -25,20 +25,20 @@ typedef struct set {
 int search(SET *sp, char *elt, bool *found) {
     assert((sp != NULL) && (elt != NULL)); // make sure both sp & elt exist
     
-    int low = 0, high = sp->count-1, mid;
+    int low = 0, high = sp->count-1, mid; // create vars for binary search
 
     while(low <=high) {
-        mid = (high+low)/2;
+        mid = (high+low)/2; // find midpoint of array
 
-        if(strcmp(sp->elts[mid], elt) > 0) {
+        if(strcmp(sp->elts[mid], elt) > 0) { // we know that elt is in first half of array
             high = mid - 1;
         }
-        else if(strcmp(sp->elts[mid], elt) < 0) {
+        else if(strcmp(sp->elts[mid], elt) < 0) { // we know elt is in second half of array
             low = mid+1;
         }
-        else {
-            *found = true;
-            return mid;
+        else { // we know this is elt
+            *found = true; 
+            return mid; // mid = index of elt
         }
     }
 
@@ -102,7 +102,7 @@ void addElement(SET *sp, char *elt) {
         }
 
         sp->elts[i] = strdup(elt);
-        sp->count++;
+        sp->count++; // increase count by 1
     }
 }
 
@@ -122,7 +122,7 @@ void removeElement(SET *sp, char *elt) {
             sp->elts[j] = sp->elts[j+1]; // shift everything to the left, filling up the empty space
         }
 
-        sp->count--;
+        sp->count--; // decrease count by 1
     }
 }
 
