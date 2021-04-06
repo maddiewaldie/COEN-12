@@ -6,6 +6,7 @@
 # include <assert.h>
 # include <stdio.h>
 # include <stdlib.h>
+# include <string.h>
 # include "set.h"
 
 # define MAX_SIZE 18000
