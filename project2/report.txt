@@ -2,28 +2,28 @@ UNIQUE
 
 File Name                       Unsorted.c              Sorted.c
 ------------------------------------------------------------------
-Bible.txt                       
-Genesis.txt                     
-GreenEggsAndHam.txt             
-HoundOfTheBaskervilles.txt      
-Macbeth.txt                     
-TheCountOfMonteCristo.txt       
-TheSecretGarden.txt             
-TheWarOfTheWorlds.txt           
-TreasureIsland.txt              
-TwentyThousandLeagues.txt       
+Bible.txt                       0m2.854s                0m0.377s
+Genesis.txt                     0m0.130s                0m0.041s
+GreenEggsAndHam.txt             0m0.012s                0m0.011s
+HoundOfTheBaskervilles.txt      0m0.274s                0m0.086s
+Macbeth.txt                     0m0.128s                0m0.044s
+TheCountOfMonteCristo.txt       0m2.670s                0m0.394s
+TheSecretGarden.txt             0m0.307s                0m0.086s
+TheWarOfTheWorlds.txt           0m0.342s                0m0.105s
+TreasureIsland.txt              0m0.315s                0m0.097s
+TwentyThousandLeagues.txt       0m0.600s                0m0.154s
 
 PARITY
 
 File Name                       Unsorted.c              Sorted.c
 ------------------------------------------------------------------
-Bible.txt
-Genesis.txt
-GreenEggsAndHam.txt
-HoundOfTheBaskervilles.txt
-Macbeth.txt
-TheCountOfMonteCristo.txt
-TheSecretGarden.txt
-TheWarOfTheWorlds.txt
-TreasureIsland.txt
-TwentyThousandLeagues.txt
+Bible.txt                       0m29.056s               0m3.736s
+Genesis.txt                     0m0.351s                0m0.123s
+GreenEggsAndHam.txt             0m0.012s                0m0.012s
+HoundOfTheBaskervilles.txt      0m1.137s                0m0.092s
+Macbeth.txt                     0m0.309s                0m0.110s
+TheCountOfMonteCristo.txt       0m29.115s               0m3.842s
+TheSecretGarden.txt             0m1.245s                0m0.342s
+TheWarOfTheWorlds.txt           0m1.371s                0m0.314s
+TreasureIsland.txt              0m1.333s                0m0.338s
+TwentyThousandLeagues.txt       0m3.071s                0m0.592s
