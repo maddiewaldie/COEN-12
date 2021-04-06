@@ -1,4 +1,4 @@
-/* COEN 12 Lab #1
+/* COEN 12 Lab #2 - File: unsorted.c
  * Author: Madeleine Waldie
  * Due Date: 4/18/21
  */
@@ -6,8 +6,6 @@
 # include <assert.h>
 # include <stdio.h>
 # include <stdlib.h>
-# include <string.h>
-# include <stdbool.h>
 # include "set.h"
 
 # define MAX_SIZE 18000
