@@ -28,7 +28,9 @@ typedef struct set {
 */
 int search(SET *sp, char *elt) {
     assert((sp != NULL) && (elt != NULL)); // make sure both sp & elt exist
-    for(int i = 0; i < sp -> count; i++) {
+
+    int i;
+    for(i = 0; i < sp -> count; i++) {
         if (strcmp(sp->elts[i],elt)==0) {
             return i; // return index of elt
         }
@@ -56,7 +58,8 @@ SET *createSet(int maxElts) {
     destroySet: deallocate memory associated with the set pointed to by sp
 */
 void destroySet(SET *sp) { 
-    for(int i = 0; i < sp->count; i++) {
+    int i;
+    for(i = 0; i < sp->count; i++) {
         free(sp->elts[i]); // deallocate memory of elements in array
     }
     
@@ -116,7 +119,8 @@ char **getElements(SET *sp) {
     char **copy = malloc(sizeof(char*)*sp->count);
     assert(copy != NULL); // check to make sure memory was allocated
     
-    for(int i = 0; i < sp->count; i ++) {
+    int i;
+    for(i = 0; i < sp->count; i ++) {
         copy[i] = strdup(sp->elts[i]); // copy each elt into a copy array
     }
 
