@@ -1,0 +1,124 @@
+/* COEN 12 Lab #1
+ * Author: Madeleine Waldie
+ * Due Date: 4/18/21
+ *
+ * Use an unsorted array of length m > 0.
+ * The first n<=m slots are used to hold n strings in arbitrary order.
+ * Use sequential search to locate an element in the array.
+ */
+
+# include <assert.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <string.h>
+# include <stdbool.h>
+# include "set.h"
+
+# define MAX_SIZE 18000
+
+typedef struct set {
+    int count; // num elements
+    int length; // length of array
+    char **elts; // array
+} SET;
+
+/*
+    search: sequentially search through array for elt; if element is not found, return -1.
+    note: this is a private function
+*/
+int search(SET *sp, char *elt) {
+    assert((sp != NULL) && (elt != NULL)); // make sure both sp & elt exist
+    for(int i = 0; i < sp -> count; i++) {
+        if (strcmp(sp->elts[i],elt)==0) {
+            return i; // return index of elt
+        }
+    }
+
+    return -1; // if element is not found return -1
+}
+
+/*
+    creatsSet: return a pointer to a new set with a maximum capacity of maxElts
+*/
+SET *createSet(int maxElts) { 
+    SET*sp = malloc(sizeof(SET)); // declare and allocate memory for set
+    assert(sp != NULL); // check to make sure memory was allocated
+
+    sp->count = 0; // set count to number of elements currently in set (0 right now)
+    sp->length = maxElts; // set length to length of array
+    sp->elts = malloc(sizeof(char*)*maxElts); //allocate memory for array
+    assert(sp->elts != NULL); // check to make sure memory was allocated
+
+    return sp;
+}
+
+/*
+    destroySet: deallocate memory associated with the set pointed to by sp
+*/
+void destroySet(SET *sp) { 
+    for(int i = 0; i < sp->count; i++) {
+        free(sp->elts[i]); // deallocate memory of elements in array
+    }
+    
+    free(sp->elts); // deallocate memory of the array
+    free(sp); //  deallocate memory of the set
+}
+
+/*
+    numElements: return the number of elements in the set pointed to by sp
+*/
+int numElements(SET *sp) {
+    return sp->count;
+}
+
+/*
+    addElement: add elt to the set pointed to by sp
+*/
+void addElement(SET *sp, char *elt) { 
+    assert((sp != NULL) && (elt != NULL) && (sp->count < MAX_SIZE)); // make sure both sp & elt exist, and that count is less than max num of elements
+    if(search(sp, elt) == -1) { // only add elt if there isn't a duplicate of elt in sp
+        sp->elts[sp -> count] = strdup(elt);
+        sp->count++;
+    }
+}
+
+/*
+    removeElement: remove elt from the set pointed to by sp
+*/
+void removeElement(SET *sp, char *elt) {
+    assert((sp != NULL) && (elt != NULL)); // make sure both sp & elt exist
+
+    int i = search(sp, elt); // get index of elt
+
+    if(i != -1) { // only remove elt if elt exists in the array
+        free(sp->elts[i]); // deallocate memory at index of elt
+        sp->elts[i] = sp->elts[sp->count - 1]; // put last element into the slot elt was previously in
+        sp->elts[sp->count - 1] = NULL; // set last element to null
+        sp->count--; // decrease count by 1
+    }
+}
+
+/*
+    findElement: if elt is present in the set pointed to by sp then return the matching element, otherwise return NULL
+*/
+char *findElement(SET *sp, char *elt) {
+    assert((sp != NULL) && (elt != NULL)); // make sure both sp & elt exist
+    
+    return (search(sp, elt) == -1) ? NULL : elt; // if elt isn't present in set, return NULL, otherwise return elt
+}
+
+/*
+    getElements: allocate and return an array of elements in the set pointed to by sp
+*/
+char **getElements(SET *sp) {
+    assert(sp != NULL); // make sure both sp exists
+
+    char **copy = malloc(sizeof(char*)*sp->count);
+    assert(copy != NULL); // check to make sure memory was allocated
+    
+    for(int i = 0; i < sp->count; i ++) {
+        copy[i] = strdup(sp->elts[i]); // copy each elt into a copy array
+    }
+
+    return copy;
+}
