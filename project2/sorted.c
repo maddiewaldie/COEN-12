@@ -128,18 +128,19 @@ void removeElement(SET *sp, char *elt) {
 
 /*
     findElement: if elt is present in the set pointed to by sp then return the matching element, otherwise return NULL
-    runtime: 
+    runtime: O(log(n))
 */
 char *findElement(SET *sp, char *elt) {
     assert((sp != NULL) && (elt != NULL)); // make sure both sp & elt exist
     
     bool found;
-    return (search(sp, elt, &found) == -1) ? NULL : elt; // if elt isn't present in set, return NULL, otherwise return elt
+    search(sp, elt, &found);
+    return found ? elt : NULL; // if elt isn't present in set, return NULL, otherwise return elt
 }
 
 /*
     getElements: allocate and return an array of elements in the set pointed to by sp
-    runtime: 
+    runtime: O(n)
 */
 char **getElements(SET *sp) {
     assert(sp != NULL); // make sure both sp exists
