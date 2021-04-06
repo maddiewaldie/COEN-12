@@ -19,8 +19,7 @@ typedef struct set {
 
 /*
     search: private function that sequentially searches through array for elt; if element is not found, return -1.
-    
-    runtime: O(n)
+    runtime: 
 */
 int search(SET *sp, char *elt) {
     assert((sp != NULL) && (elt != NULL)); // make sure both sp & elt exist
@@ -36,8 +35,7 @@ int search(SET *sp, char *elt) {
 }
 
 /*
-    creatsSet: return a pointer to a new set with a maximum capacity of maxElts
-
+    createSet: return a pointer to a new set with a maximum capacity of maxElts
     runtime: O(1)
 */
 SET *createSet(int maxElts) { 
@@ -54,7 +52,6 @@ SET *createSet(int maxElts) {
 
 /*
     destroySet: deallocate memory associated with the set pointed to by sp
-
     runtime: O(n)
 */
 void destroySet(SET *sp) { 
@@ -69,16 +66,15 @@ void destroySet(SET *sp) {
 
 /*
     numElements: return the number of elements in the set pointed to by sp
-
     runtime: O(1)
 */
 int numElements(SET *sp) {
+    assert(sp != NULL); // make sure sp exists
     return sp->count;
 }
 
 /*
     addElement: add elt to the set pointed to by sp
-
     runtime: O(n)
 */
 void addElement(SET *sp, char *elt) { 
@@ -91,7 +87,6 @@ void addElement(SET *sp, char *elt) {
 
 /*
     removeElement: remove elt from the set pointed to by sp
-
     runtime: O(n)
 */
 void removeElement(SET *sp, char *elt) {
@@ -109,7 +104,6 @@ void removeElement(SET *sp, char *elt) {
 
 /*
     findElement: if elt is present in the set pointed to by sp then return the matching element, otherwise return NULL
-
     runtime: O(n)
 */
 char *findElement(SET *sp, char *elt) {
@@ -120,11 +114,10 @@ char *findElement(SET *sp, char *elt) {
 
 /*
     getElements: allocate and return an array of elements in the set pointed to by sp
-
     runtime: O(n)
 */
 char **getElements(SET *sp) {
-    assert(sp != NULL); // make sure both sp exists
+    assert(sp != NULL); // make sure sp exists
 
     char **copy = malloc(sizeof(char*)*sp->count);
     assert(copy != NULL); // check to make sure memory was allocated
