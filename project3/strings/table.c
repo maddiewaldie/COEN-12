@@ -48,7 +48,7 @@ int search(SET *sp, char *elt, bool *found) {
 	int deletedloc = -1;
 
 	for(i = 0; i < sp->count; i++) { // go through elts
-		loc = (h + i) % sp->count; // increment hash vakye by i
+		loc = (h + i) % sp->count; // increment hash value by i
 		if(sp->flags[loc] == FILLED) { // array location has some element
 			if(strcmp(sp->elts[loc], elt) == 0) { // both elts are equal
 				*found = true; // found the element!
