@@ -150,10 +150,14 @@ void removeElement(SET *sp, char *elt) {
 
 /*
 findElement: if elt is present in the set pointed to by sp then return the matching element, otherwise return NULL
-runtime: 
+runtime: worst: O(n); expected: O(1)
 */
 char *findElement(SET *sp, char *elt) {
-    
+    assert(sp != NULL && elt != NULL);
+
+    bool found;
+    int index = search(sp, elt, &found);
+    return (found) ? sp->elts[index] : NULL; // if elt is found, return elt, otherwise return NULL
 }
 
 /*
