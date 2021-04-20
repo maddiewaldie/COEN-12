@@ -11,9 +11,9 @@
 # include "set.h"
 
 // Flag constant values
-# define E 0 // empty
-# define F 1 // filled
-# define D 2 // deleted
+# define EMPTY 0 // empty flag
+# define FILLED 1 // filled flag
+# define DELETED 2 // deleted flag
 
 typedef struct set {
 	int count; // num elements
@@ -49,13 +49,13 @@ int search(SET *sp, char *elt, bool *found) {
 
 	for(i = 0; i < sp->count; i++) {
 		loc = (h + i) % sp->count;
-		if(sp->flags[loc] == F) {
+		if(sp->flags[loc] == FILLED) {
 			if(strcmp(sp->elts[loc], elt) == 0) {
 				*found = true;
 				return loc;
 			}
 		}
-		else if(sp->flags[loc] == D) {
+		else if(sp->flags[loc] == DELETED) {
 			if(deletedloc == -1) {
 				deletedloc = loc;
 			}
@@ -87,7 +87,7 @@ SET *createSet(int maxElts) {
 
 	int i;
 	for(i = 0; i < maxElts; i++) {
-		sp->flags[i] = E; // assign each empty elt an empty flag
+		sp->flags[i] = EMPTY; // assign each empty elt an empty flag
 	}
 
 	assert(sp->elts != NULL); // check to make sure memory was allocated
@@ -102,7 +102,7 @@ runtime: O(n)
 void destroySet(SET *sp) {
 	int i;
 	for(i = 0; i < sp->count; i++) {
-		if(sp->flags[i] == F) {
+		if(sp->flags[i] == FILLED) {
 			free(sp->elts[i]); // deallocate memory of filled slots in array
 		}
 	}
@@ -131,7 +131,7 @@ void addElement(SET *sp, char *elt) {
 	int index = search(sp, elt, &found);
 	if (!found) {
 		sp->elts[index] = strdup(elt);
-		sp->flags[index] = F;
+		sp->flags[index] = FILLED;
 		sp->count++;
 	}
 }
@@ -147,7 +147,7 @@ void removeElement(SET *sp, char *elt) {
 	int index = search(sp, elt, &found);
 	if (found) {
 		free(sp->elts[index]);
-		sp->flags[index] = D;
+		sp->flags[index] = DELETED;
 		sp->count--;
 	}
 }
@@ -183,7 +183,7 @@ char **getElements(SET *sp) {
 	int i;
 	int indx = 0;
 	for(i = 0; i < sp->count; i ++) {
-		if(sp->flags[i] == F) {
+		if(sp->flags[i] == FILLED) {
 			copy[indx] = strdup(sp->elts[i]); // copy each elt into a copy array
 			indx++;
 		}
