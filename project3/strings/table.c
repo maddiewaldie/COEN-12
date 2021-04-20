@@ -43,12 +43,12 @@ runtime: worst: O(n); expected: O(1)
 int search(SET *sp, char *elt, bool *found) {
 	assert((sp != NULL) && (elt != NULL)); // make sure both sp & elt exist
 
-	int h = strhash(elt) % sp->count;
+	int h = strhash(elt) % sp->length;
 	int i, loc;
 	int deletedloc = -1;
 
-	for(i = 0; i < sp->count; i++) { // go through elts
-		loc = (h + i) % sp->count; // increment hash value by i
+	for(i = 0; i < sp->length; i++) { // go through elts
+		loc = (h + i) % sp->length; // increment hash value by i
 		if(sp->flags[loc] == FILLED) { // array location has some element
 			if(strcmp(sp->elts[loc], elt) == 0) { // both elts are equal
 				*found = true; // found the element!
@@ -102,7 +102,7 @@ runtime: O(n)
 */
 void destroySet(SET *sp) {
 	int i;
-	for(i = 0; i < sp->count; i++) {
+	for(i = 0; i < sp->length; i++) {
 		if(sp->flags[i] == FILLED) {
 			free(sp->elts[i]); // deallocate memory of filled slots in array
 		}
@@ -183,7 +183,7 @@ char **getElements(SET *sp) {
 
 	int i;
 	int indx = 0;
-	for(i = 0; i < sp->count; i ++) {
+	for(i = 0; i < sp->length; i ++) {
 		if(sp->flags[i] == FILLED) {
 			copy[indx] = strdup(sp->elts[i]); // copy each elt into a copy array
 			indx++;
