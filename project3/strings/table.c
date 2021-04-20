@@ -1,4 +1,4 @@
-/* COEN 12 Lab #2 - File: unsorted.c
+/* COEN 12 Lab #2 - File: table.c
  * Author: Madeleine Waldie
  * Due Date: 5/2/21
  */
@@ -47,26 +47,26 @@ int search(SET *sp, char *elt, bool *found) {
 	int i, loc;
 	int deletedloc = -1;
 
-	for(i = 0; i < sp->count; i++) {
-		loc = (h + i) % sp->count;
-		if(sp->flags[loc] == FILLED) {
-			if(strcmp(sp->elts[loc], elt) == 0) {
-				*found = true;
-				return loc;
+	for(i = 0; i < sp->count; i++) { // go through elts
+		loc = (h + i) % sp->count; // increment hash vakye by i
+		if(sp->flags[loc] == FILLED) { // array location has some element
+			if(strcmp(sp->elts[loc], elt) == 0) { // both elts are equal
+				*found = true; // found the element!
+				return loc; // location of element
 			}
 		}
 		else if(sp->flags[loc] == DELETED) {
 			if(deletedloc == -1) {
-				deletedloc = loc;
+				deletedloc = loc; // keep track of the first deleted location
 			}
 		}
-		else {
+		else { // must not be in the array
 			break;
 		}
 	}
 
 	*found = false;
-	if(deletedloc == -1) {
+	if(deletedloc == -1) { // if there wasn't a deleted loc, return the empty loc we see
 		return loc;
 	}
 	return deletedloc;
@@ -83,8 +83,9 @@ SET *createSet(int maxElts) {
 
 	sp->count = 0; // set count to number of elements currently in set (0 right now)
 	sp->length = maxElts; // set length to length of array
-	sp->elts = malloc(sizeof(char*)*maxElts); //allocate memory for array
-
+	sp->elts = malloc(sizeof(char*)*maxElts); // allocate memory for array
+	sp->flags = malloc(sizeof(char)*maxElts); // allocate memory for array
+	
 	int i;
 	for(i = 0; i < maxElts; i++) {
 		sp->flags[i] = EMPTY; // assign each empty elt an empty flag
