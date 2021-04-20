@@ -66,7 +66,11 @@ int search(SET *sp, char *elt, bool *found) {
     }
 
 	*found = false;
-    return (deletedloc == -1) ? loc : deletedloc; // if deletedloc equals -1, return loc, otherwise return deletedloc
+    if(deletedloc == -1) {
+        return loc;
+    }
+    return deletedloc;
+    // return (deletedloc == -1) ? loc : deletedloc; // if deletedloc equals -1, return loc, otherwise return deletedloc
 }
 
 /*
@@ -157,7 +161,13 @@ char *findElement(SET *sp, char *elt) {
 
     bool found;
     int index = search(sp, elt, &found);
-    return (found) ? sp->elts[index] : NULL; // if elt is found, return elt, otherwise return NULL
+
+    if (found == true) {
+        return sp -> elts[index];
+    } else {
+        return NULL;
+    }
+    // return (found) ? sp->elts[index] : NULL; // if elt is found, return elt, otherwise return NULL
 }
 
 /*
