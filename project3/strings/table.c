@@ -10,9 +10,10 @@
 # include <stdbool.h>
 # include "set.h"
 
-# define E 0 // empty flag
-# define F 1 // filled flag
-# define D 2 // deleted flag
+// Flag constant values
+# define E 0 // empty
+# define F 1 // filled
+# define D 2 // deleted
 
 typedef struct set {
 	int count; // num elements
@@ -117,18 +118,34 @@ int numElements(SET *sp) {
 
 /*
 addElement: add elt to the set pointed to by sp
-runtime: 
+runtime: worst: O(n); expected: O(1)
 */
 void addElement(SET *sp, char *elt) {
-    
+    assert(sp != NULL && elt != NULL);
+
+    bool found;
+    int index = search(sp, elt, &found);
+    if (!found) {
+        sp->elts[index] = strdup(elt);
+        sp->flags[index] = F;
+        sp->count++;
+    }
 }
 
 /*
 removeElement: remove elt from the set pointed to by sp
-runtime: 
+runtime: worst: O(n); expected: O(1)
 */
 void removeElement(SET *sp, char *elt) {
+    assert(sp != NULL && elt != NULL);
 
+    bool found;
+    int index = search(sp, elt, &found);
+    if (found) {
+        free(sp->elts[index]);
+        sp->flags[index] = D;
+        sp->count--;
+    }
 }
 
 /*
@@ -136,12 +153,12 @@ findElement: if elt is present in the set pointed to by sp then return the match
 runtime: 
 */
 char *findElement(SET *sp, char *elt) {
-
+    
 }
 
 /*
 getElements: allocate and return an array of elements in the set pointed to by sp
-runtime: 
+runtime: O(n)
 */
 char **getElements(SET *sp) {
     assert(sp != NULL); // make sure sp exists
