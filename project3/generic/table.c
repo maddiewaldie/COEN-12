@@ -18,7 +18,7 @@
 typedef struct set {
     int count; // num elements
     int length; // length of array
-    void **data; // array
+    void **elts; // array
     char *flags; // array of flags (E - empty, F - filled, D - deleted)
     int (*compare)(); // compare function in the set
     unsigned (*hash)(); // equivalent of strhash stored in the set
