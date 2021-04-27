@@ -43,9 +43,9 @@ runtime: worst: O(n); expected: O(1)
 int search(SET *sp, char *elt, bool *found) {
 	assert((sp != NULL) && (elt != NULL)); // make sure both sp & elt exist
 
-	int h = strhash(elt) % sp->length;
-	int i, loc;
-	int deletedloc = -1;
+	int h = strhash(elt) % sp->length; // h is the hash value for the element
+	int i, loc; // i is incrementer; loc is element location
+	int deletedloc = -1; 
 
 	for(i = 0; i < sp->length; i++) { // go through elts
 		loc = (h + i) % sp->length; // increment hash value by i
@@ -55,7 +55,7 @@ int search(SET *sp, char *elt, bool *found) {
 				return loc; // location of element
 			}
 		}
-		else if(sp->flags[loc] == DELETED) {
+		else if(sp->flags[loc] == DELETED) { // array location has a deleted element
 			if(deletedloc == -1) {
 				deletedloc = loc; // keep track of the first deleted location
 			}
@@ -65,12 +65,9 @@ int search(SET *sp, char *elt, bool *found) {
 		}
 	}
 
-	*found = false;
-	if(deletedloc == -1) { // if there wasn't a deleted loc, return the empty loc we see
-		return loc;
-	}
-	return deletedloc;
-	// return (deletedloc == -1) ? loc : deletedloc; // if deletedloc equals -1, return loc, otherwise return deletedloc
+	*found = false; // the element has not been found, so set found to false
+
+	return (deletedloc == -1) ? loc : deletedloc; // if deletedloc equals -1, return loc, otherwise return deletedloc
 }
 
 /*
@@ -93,7 +90,7 @@ SET *createSet(int maxElts) {
 
 	assert(sp->elts != NULL); // check to make sure memory was allocated
 
-	return sp;
+	return sp; // returns a new set
 }
 
 /*
@@ -102,9 +99,9 @@ runtime: O(n)
 */
 void destroySet(SET *sp) {
 	int i;
-	for(i = 0; i < sp->length; i++) {
+	for(i = 0; i < sp->length; i++) { // go through array
 		if(sp->flags[i] == FILLED) {
-			free(sp->elts[i]); // deallocate memory of filled slots in array
+			free(sp->elts[i]); // deallocate memory only for filled slots in array
 		}
 	}
 	free(sp->flags); //deallocate memory of the array of flags
@@ -118,7 +115,7 @@ runtime: O(1)
 */
 int numElements(SET *sp) {
 	assert(sp != NULL); // make sure sp exists
-	return sp->count;
+	return sp->count; // returns number of elts in sp
 }
 
 /*
@@ -126,14 +123,15 @@ addElement: add elt to the set pointed to by sp
 runtime: worst: O(n); expected: O(1)
 */
 void addElement(SET *sp, char *elt) {
-	assert(sp != NULL && elt != NULL);
+	assert(sp != NULL && elt != NULL); // check that sp & elt exist
 
 	bool found;
-	int index = search(sp, elt, &found);
+	int index = search(sp, elt, &found); // this is the index where the element should go
+
 	if (!found) {
-		sp->elts[index] = strdup(elt);
-		sp->flags[index] = FILLED;
-		sp->count++;
+		sp->elts[index] = strdup(elt); // add element to the array
+		sp->flags[index] = FILLED; // set flag to filled
+		sp->count++; // increment number of items in array
 	}
 }
 
@@ -142,14 +140,15 @@ removeElement: remove elt from the set pointed to by sp
 runtime: worst: O(n); expected: O(1)
 */
 void removeElement(SET *sp, char *elt) {
-	assert(sp != NULL && elt != NULL);
+	assert(sp != NULL && elt != NULL); // make sure that both sp & elt exist
 
 	bool found;
-	int index = search(sp, elt, &found);
+	int index = search(sp, elt, &found); // this is the index where the element should be
+
 	if (found) {
-		free(sp->elts[index]);
-		sp->flags[index] = DELETED;
-		sp->count--;
+		free(sp->elts[index]); // deallocate memory at index
+		sp->flags[index] = DELETED; // set flag to deleted
+		sp->count--; // decrement number of items in array
 	}
 }
 
@@ -158,17 +157,12 @@ findElement: if elt is present in the set pointed to by sp then return the match
 runtime: worst: O(n); expected: O(1)
 */
 char *findElement(SET *sp, char *elt) {
-	assert(sp != NULL && elt != NULL);
+	assert(sp != NULL && elt != NULL); // make sure that both sp & elt exist
 
 	bool found;
-	int index = search(sp, elt, &found);
+	int index = search(sp, elt, &found); // this is the index where the element should be
 
-	if (found == true) {
-		return sp -> elts[index];
-	} else {
-		return NULL;
-	}
-	// return (found) ? sp->elts[index] : NULL; // if elt is found, return elt, otherwise return NULL
+	return (found) ? sp->elts[index] : NULL; // if elt is found, return elt, otherwise return NULL
 }
 
 /*
@@ -178,17 +172,18 @@ runtime: O(n)
 char **getElements(SET *sp) {
 	assert(sp != NULL); // make sure sp exists
 
-	char **copy = malloc(sizeof(char*)*sp->count);
+	char **copy = malloc(sizeof(char*)*sp->count); // allocate memory for a copy array
 	assert(copy != NULL); // check to make sure memory was allocated
 
-	int i;
-	int indx = 0;
-	for(i = 0; i < sp->length; i ++) {
-		if(sp->flags[i] == FILLED) {
+	int i; // i keeps track of the index of the sp array
+	int indx = 0; // indx keeps track of the index of the copy array
+
+	for(i = 0; i < sp->length; i ++) { // go through array
+		if(sp->flags[i] == FILLED) { // only copy over elements if they have a filled flag
 			copy[indx] = strdup(sp->elts[i]); // copy each elt into a copy array
-			indx++;
+			indx++; // increment index for the copy array
 		}
 	}
 
-	return copy;
+	return copy; // return the new copy array
 }
