@@ -1,6 +1,12 @@
 {
     "files.associations": {
         "set.h": "c",
-        "stdbool.h": "c"
+        "stdbool.h": "c",
+        "string.h": "c",
+        "__locale": "c",
+        "__string": "c",
+        "string": "c",
+        "string_view": "c",
+        "tuple": "c"
     }
 }
