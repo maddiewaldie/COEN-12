@@ -152,3 +152,22 @@ void *getElements(SET *sp) {
 
 	return copy; // return the new copy array
 }
+
+/*
+destroySet: deallocate memory associated with the set pointed to by sp
+runtime: O(1)
+*/
+void destroySet(SET *sp) {
+	free(sp->flags); //deallocate memory of the array of flags
+	free(sp->elts); // deallocate memory of the array
+	free(sp); //  deallocate memory of the set
+}
+
+/*
+numElements: return the number of elements in the set pointed to by sp
+runtime: O(1)
+*/
+int numElements(SET *sp) {
+	assert(sp != NULL); // make sure sp exists
+	return sp->count; // returns number of elts in sp
+}
