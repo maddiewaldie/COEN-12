@@ -18,7 +18,7 @@
 typedef struct set {
     int count; // num elements
     int length; // length of array
-    void **data; // array
+    void **elts; // array
     char *flags; // array of flags (E - empty, F - filled, D - deleted)
     int (*compare)(); // compare function in the set
     unsigned (*hash)(); // equivalent of strhash stored in the set
@@ -152,6 +152,7 @@ void *getElements(SET *sp) {
 
 	return copy; // return the new copy array
 }
+<<<<<<< HEAD
 
 /*
 destroySet: deallocate memory associated with the set pointed to by sp
@@ -171,3 +172,5 @@ int numElements(SET *sp) {
 	assert(sp != NULL); // make sure sp exists
 	return sp->count; // returns number of elts in sp
 }
+=======
+>>>>>>> e6599dba865082e9d7560668ad1a901020d08a90
