@@ -152,7 +152,6 @@ void *getElements(SET *sp) {
 
 	return copy; // return the new copy array
 }
-<<<<<<< HEAD
 
 /*
 destroySet: deallocate memory associated with the set pointed to by sp
@@ -172,5 +171,3 @@ int numElements(SET *sp) {
 	assert(sp != NULL); // make sure sp exists
 	return sp->count; // returns number of elts in sp
 }
-=======
->>>>>>> e6599dba865082e9d7560668ad1a901020d08a90
