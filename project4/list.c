@@ -1,7 +1,7 @@
 /* COEN 12 Lab #4 - File: list.c
  * Author: Madeleine Waldie
  * Due Date: 5/16/21
- */
+ */ 
 
 # include <stdio.h>
 # include <stdlib.h>
@@ -50,13 +50,13 @@ runtime: O(n)
 */
 void destroyList(LIST *lp) {
     assert(lp != NULL); // make sure lp exists
-    NODE *pDel = lp->head->prev;
-    NODE *pPrev;
+    NODE *pDel = lp->head->prev; // pointer to element being deleted
+    NODE *pPrev; // pointer to previous element
 
-    while(pDel != lp->head){
-        pPrev = pDel->prev;
-        free(pDel);
-        pDel=pPrev;
+    while(pDel != lp->head){ // loop through list (deleting list from the last element)
+        pPrev = pDel->prev; // set previous pointer to the one before the deleted element
+        free(pDel); // delete the current element
+        pDel=pPrev; // set deleted element to previous element
     }
     free(pDel);
     free(lp);
