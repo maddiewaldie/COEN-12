@@ -11,9 +11,9 @@
 # include "list.h"
 
 typedef struct node{
-    NODE *prev; // pointer to previous node
+    struct node *prev; // pointer to previous node
 	void* data; // data held at location
-	NODE *next; // pointer to next node
+	struct node *next; // pointer to next node
 } NODE;
 
 typedef struct list{
