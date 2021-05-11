@@ -1,4 +1,4 @@
-/* COEN 12 Lab #4 - File: set.c
+/* COEN 12 Lab #4 - File: set.c 
  * Author: Madeleine Waldie
  * Due Date: 5/16/21
  */
@@ -117,14 +117,11 @@ void  *getElements(SET *sp) {
     void  **copy = malloc(sizeof(void*) * sp->count);
     assert(copy != NULL); // make sure copy exists
 
-    int i, indx = 0; // counter vars for indices
+    int i, j, indx = 0; // counter vars for indices
     for(i = 0; i < sp->length; i++) { // go through set
         if(sp->lists[i] != NULL){ // only do when list at index i isn't NULL
             void **items = getItems(sp->lists[i]); // items at list index i to copy (getItems runtime: O(n))
-            for(int j = 0; j < numItems(sp->lists[i]); j++){ // go through items to add to copy
-                copy[indx] = items[j]; // add items to copy
-                indx++;
-            }
+                memcpy(copy[i], items, sizeof(void*) * sp->count);
         }
     }
 
