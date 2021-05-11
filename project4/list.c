@@ -180,7 +180,8 @@ void removeItem(LIST *lp, void *item) {
 				node->prev->next = node->next; // get rid of pointer to item
 				node->next->prev = node->prev; // get rid of pointer to item
 				free(node); // free memory at node
-				return; // job is done, can stop searching
+				lp->count--;
+				return; // job is done, can stop searching	
 			}
 			node = node->next; // move onto next node
 		}

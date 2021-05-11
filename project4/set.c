@@ -110,18 +110,19 @@ void  *findElement(SET *sp, void *elt) {
 
 /*
 getElements: allocate and return an array of elements in the set pointed to by sp
-runtime: O(n^2)
+runtime: O(n)
 */
 void  *getElements(SET *sp) {
     assert(sp != NULL); // make sure sp exists
     void  **copy = malloc(sizeof(void*) * sp->count);
     assert(copy != NULL); // make sure copy exists
 
-    int i, j, indx = 0; // counter vars for indices
+    int i, j = 0; // counter vars for indices
     for(i = 0; i < sp->length; i++) { // go through set
         if(sp->lists[i] != NULL){ // only do when list at index i isn't NULL
             void **items = getItems(sp->lists[i]); // items at list index i to copy (getItems runtime: O(n))
-                memcpy(copy[i], items, sizeof(void*) * sp->count);
+                memcpy(copy + j, items,sizeof(void*)* numItems(sp->lists[i])); // copy over to new array
+		j = j + numItems(sp->lists[i]);
         }
     }
 
