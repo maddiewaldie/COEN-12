@@ -1,0 +1,10 @@
+#!/bin/sh
+
+rm -rf term
+mkdir term
+
+cp -a Makefile maze.c radix.c qsort.c list.h term
+ln -s /scratch/coen12/books term
+
+tar cvf term.tar ./term
+rm -rf term
