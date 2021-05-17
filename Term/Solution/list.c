@@ -10,6 +10,53 @@
 # include <stdbool.h>
 # include "list.h"
 
+// MY ADDITIONAL FUNCTIONS
+
+/* 
+search: goes through list starting from head & ending at tail, returning the node at which the item at position index is located
+runtime: O(n)
+*/
+NODE *search(LIST *lp, int index, int *loc)
+{
+	NODE *node = lp->head; // start at first node
+	int i; // for loop counter
+
+	for(i = 0; i < lp->itemCount; i += node->count, node = node->next) // loop through nodes
+	{
+		if(index < node->count)
+		{
+			*loc = index; // update loc to be index
+			return node;
+		}		
+		else
+			index -= node->count;
+	}
+}
+
+/*
+createNode: sets up a new node & returns it
+runtime: O(1)
+*/
+NODE *createNode(LIST *lp)
+{
+	NODE *newNode = malloc(sizeof(NODE));
+	assert(newNode != NULL);
+	newNode->count = 0; // set current count of items in array to zero
+
+	newNode->size = pow(1,lp->nodeCount); //set size of array (dynamically increase size of arrays as you add new nodes)
+	newNode->first = 0; // index of first element (empty right now)
+
+	newNode->array = malloc(sizeof(void)* newNode->size); // allocate memory for the array
+	assert(newNode->array != NULL); // make sure the array exists
+
+	newNode->prev = NULL;
+	newNode->next = NULL; //
+
+	lp->nodeCount++; // increase count of nodes in list
+	
+	return newNode; // return new node
+}
+
 // DATA STRUCTURES
 typedef struct node
 {
@@ -199,51 +246,4 @@ void *getItem(LIST *lp, int index)
 	int loc = 0;
 	NODE * node = search(lp, index, &loc);
 	return node->array[(node->first + loc)% node->size];
-}
-
-// MY ADDITIONAL FUNCTIONS
-
-/* 
-search: goes through list starting from head & ending at tail, returning the node at which the item at position index is located
-runtime: O(n)
-*/
-NODE *search(LIST *lp, int index, int *loc)
-{
-	NODE *node = lp->head; // start at first node
-	int i; // for loop counter
-
-	for(i = 0; i < lp->itemCount; i += node->count, node = node->next) // loop through nodes
-	{
-		if(index < node->count)
-		{
-			*loc = index; // update loc to be index
-			return node;
-		}		
-		else
-			index -= node->count;
-	}
-}
-
-/*
-createNode: sets up a new node & returns it
-runtime: O(1)
-*/
-NODE *createNode(LIST *lp)
-{
-	NODE *newNode = malloc(sizeof(NODE));
-	assert(newNode != NULL);
-	newNode->count = 0; // set current count of items in array to zero
-
-	newNode->size = pow(1,lp->nodeCount); //set size of array (dynamically increase size of arrays as you add new nodes)
-	newNode->first = 0; // index of first element (empty right now)
-
-	newNode->array = malloc(sizeof(void)* newNode->size); // allocate memory for the array
-	assert(newNode->array != NULL); // make sure the array exists
-
-	newNode->prev = NULL;
-	newNode->next = NULL; //
-
-	lp->nodeCount++; // increase count of nodes in list
-	
-	return newNode; // return new node
 }
