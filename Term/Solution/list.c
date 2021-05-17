@@ -8,6 +8,7 @@
 # include <string.h>
 # include <assert.h>
 # include <stdbool.h>
+# include <math.h>
 # include "list.h"
 
 // DATA STRUCTURES
@@ -48,6 +49,7 @@ NODE *search(LIST *lp, int index, int *loc) {
 		else
 			index -= node->count;
 	}
+return NULL;
 }
 
 /*
