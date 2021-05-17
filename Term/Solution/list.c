@@ -10,6 +10,28 @@
 # include <stdbool.h>
 # include "list.h"
 
+// DATA STRUCTURES
+typedef struct node
+{
+	void **array; // array of items held at location
+
+	struct node *next; // pointer to next node
+	struct node *prev; // pointer to previous node
+
+	int first; // index of first slot in array
+	int count; // number of items in array
+	int size; // size of array
+} NODE;
+
+typedef struct list
+{
+	int nodeCount; // count of nodes
+	int itemCount; // count of items
+
+	NODE *head; // pointer to first node in list
+	NODE *tail; // pointer to last node in list
+} LIST;
+
 // MY ADDITIONAL FUNCTIONS
 
 /* 
@@ -56,28 +78,6 @@ NODE *createNode(LIST *lp)
 	
 	return newNode; // return new node
 }
-
-// DATA STRUCTURES
-typedef struct node
-{
-	void **array; // array of items held at location
-
-	struct node *next; // pointer to next node
-	struct node *prev; // pointer to previous node
-
-	int first; // index of first slot in array
-	int count; // number of items in array
-	int size; // size of array
-} NODE;
-
-typedef struct list
-{
-	int nodeCount; // count of nodes
-	int itemCount; // count of items
-
-	NODE *head; // pointer to first node in list
-	NODE *tail; // pointer to last node in list
-} LIST;
 
 // FUNCTIONS FROM PROJECT INSTRUCTIONS
 
