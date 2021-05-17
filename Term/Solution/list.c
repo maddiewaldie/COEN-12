@@ -207,7 +207,7 @@ void *getItem(LIST *lp, int index)
 search: goes through list starting from head & ending at tail, returning the node at which the item at position index is located
 runtime: O(n)
 */
-static NODE *search(LIST *lp, int index, int *loc)
+NODE *search(LIST *lp, int index, int *loc)
 {
 	NODE *node = lp->head; // start at first node
 	int i; // for loop counter
@@ -228,7 +228,7 @@ static NODE *search(LIST *lp, int index, int *loc)
 createNode: sets up a new node & returns it
 runtime: O(1)
 */
-static NODE *createNode(LIST *lp)
+NODE *createNode(LIST *lp)
 {
 	NODE *newNode = malloc(sizeof(NODE));
 	assert(newNode != NULL);
