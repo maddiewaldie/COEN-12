@@ -73,10 +73,11 @@ NODE *createNode(LIST *lp) {
 	assert(newNode != NULL);
 
 	newNode->count = 0; // set current count of items in array to zero
-	newNode->size = 2 * (lp->head->size); //set size of array (dynamically increase size of arrays as you add new nodes)
+	int newSize = 2 * (lp->head->size); // make new amount of slots equal double current size
+	newNode->size = 2 * newSize; //set size of array (dynamically increase size of arrays as you add new nodes)
 	newNode->first = 0; // index of first element (empty right now)
 
-	newNode->array = malloc(sizeof(void)* newNode->size); // allocate memory for the array
+	newNode->array = malloc(sizeof(void*) * (newSize)); // allocate memory for the array
 	assert(newNode->array != NULL); // make sure the array exists
 
 	newNode->prev = NULL;
