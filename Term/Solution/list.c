@@ -39,30 +39,19 @@ runtime: O(n)
 */
 NODE *search(LIST *lp, int index, int *loc) {
 	NODE *node = lp->head; // start at first node
-
 	int i; // counter
 	
-	while((index > node->count) && (i < lp->itemCount)) {
-		index -= node->count;
-		node = node->next;
-		i += node->count;
+	while((index > node->count) && (i < lp->itemCount)) { // go through list until index could be found in a node's array
+		index -= node->count; // decrement index by the number of items in array
+		node = node->next; // move on to next node
+		i += node->count; // increment i by the number of items in array
 	}
 	*loc = index; // update loc to be index
-	return node;
-
-// 	for(i = 0; i < lp->itemCount; i += node->count, node = node->next) { // loop through nodes
-// 		if(index < node->count) {
-// 			*loc = index; // update loc to be index
-// 			return node;
-// 		}		
-// 		else
-// 			index -= node->count;
-// 	}
-// return NULL;
+	return node; // return node at which item at index is located
 }
 
 /*
-createNode: sets up a new node & returns it
+createNode: sets up a new node & returns it; useful because new nodes are created several times in code
 runtime: O(1)
 */
 NODE *createNode(LIST *lp) {
@@ -72,13 +61,13 @@ NODE *createNode(LIST *lp) {
 	newNode->count = 0; // set current count of items in array to zero
 	newNode->size = 2 * (lp->nodeCount); //set size of array (dynamically increase size of arrays as you add new nodes)
 	newNode->first = 0; // index of first element (empty right now)
-
+	
 	newNode->array = malloc(sizeof(void)* newNode->size); // allocate memory for the array
 	assert(newNode->array != NULL); // make sure the array exists
-
+	
 	newNode->prev = NULL;
 	newNode->next = NULL;
-
+	
 	lp->nodeCount++; // increase count of nodes in list
 	
 	return newNode; // return new node
@@ -105,8 +94,7 @@ LIST *createList(void) {
 	lp->head->count = 0; // number of full slots is zero at start
 	lp->head->size = 64; // make 64 slots available for the first node
 
-	//allocate a void* array with as many indices as their are "slots"
-	lp->head->array = malloc(sizeof(void*) * 64);
+	lp->head->array = malloc(sizeof(void*) * 64); // allocate a void* array with as many indices as their are "slots"
 
 	lp->tail = lp->head; // set tail to head, as list is empty right now
 
@@ -119,11 +107,14 @@ runtime: O(n)
 */
 void destroyList(LIST *lp) {
 	assert(lp != NULL); // make sure lp exists
-	NODE *node = lp->head; // first node in list
+	NODE *pCur = lp->head; // first node in list
+	NODE *pDel; // to keep track of deleted node
 
-	while(node != NULL) { // go through list
-		free(node->array); // free array at each node
-		node = node->next; // move on to next node
+	while(pCur != NULL) { // go through list
+		pDel = pCur->next; // assign node to be deleted next
+		free(pCur->array); // free current node's data
+		free(pCur); // free current node
+		pCur = pDel; // set current node to next node to be deleted
 	}
 
 	free(lp); // free whole list
@@ -143,15 +134,15 @@ addFirst: add item as the first item in the list pointed to by lp
 runtime: O(1)
 */
 void addFirst(LIST *lp, void *item) {
-	assert((lp!=NULL) && (item!=NULL)); // make sure lp & item exist
+	assert((lp != NULL) && (item != NULL)); // make sure lp & item exist
 
 	if(lp->nodeCount == 0) { // if there are no nodes, add the first node
-		NODE *firstNode = createNode(lp); // first node in array
+		NODE *firstNode = createNode(lp); // first node in array (runtime of createNode: O(1))
 		lp->head = firstNode; // make head point to first node
 		lp->tail = firstNode; // because this will be only node in list, also set tail to point to firstNode	
 	}
-	else if(lp->head->count==lp->head->size) { // if the first node is full, then a new node is allocated and set as the new head
-		NODE *newFirstNode = createNode(lp); // create new first node
+	else if(lp->head->count == lp->head->size) { // if the first node is full, then a new node is allocated and set as the new head
+		NODE *newFirstNode = createNode(lp); // create new first node (runtime of createNode: O(1))
 		newFirstNode->next = lp->head;
 		lp->head->prev = newFirstNode;
 		lp->head = newFirstNode; // make head point to new first node
@@ -171,20 +162,20 @@ runtime: O(1)
 void addLast(LIST *lp, void *item) {
 	assert((lp!=NULL) && (item!=NULL)); // make sure lp & item exist
 
-	if(lp->nodeCount==0) { // if there are no nodes, add the first node 
-		NODE *firstNode = createNode(lp); // first node in array is same as last node
-		lp->head=firstNode; // make head point to node
-		lp->tail=firstNode; // make tail point to node
+	if(lp->nodeCount == 0) { // if there are no nodes, add the first node 
+		NODE *firstNode = createNode(lp); // first node in array is same as last node (runtime of createNode: O(1))
+		lp->head = firstNode; // make head point to node
+		lp->tail = firstNode; // make tail point to node
 	}
 	else if(lp->tail->count == lp->head->size) { // if the last node is full, then a new node is allocated and set as the new tail
-		NODE *newTailNode = createNode(lp); // create new tail node
+		NODE *newTailNode = createNode(lp); // create new tail node (runtime of createNode: O(1))
 		newTailNode->prev = lp->tail;
 		lp->tail->next = newTailNode;
 		lp->tail = newTailNode; // make tail point to new tail node
 	}
 
 	int index = (lp->tail->first + lp->tail->count - 1) % lp->tail->size; // index is (f +n − 1)%m (from lab handout)
-	lp->tail->array[index]=item; // add item at intended index
+	lp->tail->array[index] = item; // add item at intended index
 
 	lp->tail->count++; // increase count of number of items in array
 	lp->itemCount++; // increase count of number of items in list
@@ -195,7 +186,7 @@ removeFirst: remove and return the first item in the list pointed to by lp ; the
 runtime: O(1)
 */
 void *removeFirst(LIST *lp) {
-	assert((lp!=NULL) && (lp->itemCount > 0)); // make sure lp exists and isn't empty
+	assert((lp != NULL) && (lp->itemCount > 0)); // make sure lp exists and isn't empty
 
 	void *itemToDelete; // create variable for item to be deleted
 
@@ -221,7 +212,7 @@ removeLast: remove and return the last item in the list pointed to by lp ; the l
 runtime: O(1)
 */
 void *removeLast(LIST *lp) {
-	assert((lp!=NULL) && (lp->itemCount > 0)); // make sure lp exists and isn't empty
+	assert((lp != NULL) && (lp->itemCount > 0)); // make sure lp exists and isn't empty
 
 	void *itemToDelete; // create variable for item to be deleted
 
@@ -233,7 +224,7 @@ void *removeLast(LIST *lp) {
 		lp->nodeCount--; // decrease node count by 1
 	}
 
-	itemToDelete=lp->tail->array[lp->tail->first]; // delete last element
+	itemToDelete = lp->tail->array[lp->tail->first]; // delete last element
 	lp->tail->first = (lp->tail->first + 1) % lp->tail->size; // reset first pointer to new first element
 
 	lp->tail->count--; // decrement count of items in array by one
@@ -249,18 +240,18 @@ runtime: O(n)
 void *getItem(LIST *lp, int index) {
 	assert((lp != NULL) && (index >= 0) && (index < lp->itemCount)); // make sure lp exists & that index is within range
 	int loc = 0;
-	NODE * node = search(lp, index, &loc); // will update loc & return a node
+	NODE * node = search(lp, index, &loc); // will update loc & return a node (runtime of search: O(n))
 	return node->array[(node->first + loc - 1)% node->size]; // return the item at position index in the list pointed to by lp
 }
 
 /*
-setItem: ensures that the index is within the bounds of the list; It receives the proper location of the index with regards to which node it is in and which index it is in within the node's array; Then, it changes the value within the array to item
+setItem: changes item at index in list to a new item
 runtime: O(n)
 */
 void setItem(LIST *lp, int index, void *item)
 {
-	assert(lp != NULL && index>=0 && index < lp->itemCount);
+	assert(lp != NULL && index >= 0 && index < lp->itemCount); // make sure lp exists, there are items in the list, & the index is valid
 	int loc = 0;
-	NODE *p = search(lp, index, &loc);
-	p->array[(p->first + loc - 1) % p->size] = item;
+	NODE *p = search(lp, index, &loc); // will update loc & return a node (runtime of search: O(n))
+	p->array[(p->first + loc - 1) % p->size] = item; // set array at index to new item
 }
