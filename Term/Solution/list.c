@@ -20,8 +20,9 @@ typedef struct node {
 
 	int first; // index of first slot in array
 	int last; // index of last slot in array
-	int count; // number of items in array (how many indices are full in this node)
+	int count; // number of items in array
 	int size; //how many indices there are in this node
+	int full; //how many indices are full in this node
 } NODE;
 
 typedef struct list {
@@ -53,7 +54,7 @@ LIST *createList(void) {
 	lp->head->first = 0; // intialize the indices of the front of the queue as 0
 	lp->head->last = 0; // intialize the indices of the back of the queue as 0
 
-	lp->head->count = 0; // number of full slots is zero at start
+	lp->head->full = 0; // number of full slots is zero at start
 	lp->head->size = 64; // make 64 slots available for the first node
 
 	//allocate a void* array with as many indices as their are "slots"
@@ -99,7 +100,7 @@ runtime: O(1)
 void addFirst(LIST *lp, void *item) {
 	assert(lp != NULL); // make sure lp exists
 
-	if((lp->head->count) >= (lp->head->size)){ //if the head is full, allocate a new node for more data
+	if((lp->head->full) >= (lp->head->size)){ //if the head is full, allocate a new node for more data
 
 		NODE *newNode = malloc(sizeof(NODE)); // new node
 
@@ -108,7 +109,7 @@ void addFirst(LIST *lp, void *item) {
 		newNode->prev = NULL;
 		lp->head->prev = newNode;
 
-		newNode->count = 0; // node is currently empty
+		newNode->full = 0; // node is currently empty
 		int newSize = 2 * (lp->head->size); // make new amount of slots equal double current size
 		lp->head = lp->head->prev; //set the newNode as head
 		lp->head->size = newSize; //update size
@@ -119,7 +120,7 @@ void addFirst(LIST *lp, void *item) {
 		lp->nodeCount += 1; // increment number of nodes
 	}
 
-	assert((lp->head->count) < (lp->head->size)); //make sure there's room to add an item
+	assert((lp->head->full) < (lp->head->size)); //make sure there's room to add an item
 
 	lp->head->first--; //decrease the index of first
 	if(lp->head->first < 0){
@@ -128,7 +129,7 @@ void addFirst(LIST *lp, void *item) {
 	
 	lp->head->array[lp->head->first] = item; //put the item in the front of the queue in the current node
 	
-	lp->head->count += 1; // update count
+	lp->head->full += 1; // update full
 	lp->itemCount += 1; // update item count
 
 	return;
@@ -142,14 +143,14 @@ void addLast(LIST *lp, void *item) {
 	assert(lp != NULL); // make sure lp exists
 	int index; // variable to track index
 
-	if((lp->tail->count) >= (lp->tail->size)){ // if tail is full then create a new node
+	if((lp->tail->full) >= (lp->tail->size)){ // if tail is full then create a new node
 		NODE *newNode = malloc(sizeof(NODE)); // allocate memory for new node
 
 		newNode->next = NULL; // next is null because it's at end of list
 		newNode->prev = lp->tail; // previous is old tail
 		lp->tail->next = newNode; // add new node to list
 
-		newNode->count = 0; // empty array currently
+		newNode->full = 0; // empty array currently
 		int newSlots = 2 * (lp->tail->size); // double size of array
 
 		lp->tail = lp->tail->next; // make new node tail
@@ -161,18 +162,18 @@ void addLast(LIST *lp, void *item) {
 
 		lp->nodeCount += 1; // increment num nodes
 	}
-	assert((lp->tail->count) < (lp->tail->size)); // make sure item can be added
+	assert((lp->tail->full) < (lp->tail->size)); // make sure item can be added
 
 	//find the index where the last element should go
-	index = lp->tail->first + lp->tail->count;
+	index = lp->tail->first + lp->tail->full;
 	if(index >= lp->tail->size){
 		index = index - lp->tail->size;
 	}
 
 	lp->tail->array[index] = item; //insert item
-	lp->head->count += 1; // increment count
+	lp->head->full += 1; // increment full
 	lp->itemCount += 1; // increment num items
-	lp->tail->last = ((lp->head->first) + (lp->head->count)) % lp->head->size; // reassign last (use formula from lab handout)
+	lp->tail->last = ((lp->head->first) + (lp->head->full)) % lp->head->size; // reassign last (use formula from lab handout)
 
 	return;
 }
@@ -184,7 +185,7 @@ runtime: O(1)
 void *removeFirst(LIST *lp) {
 	assert((lp != NULL) && (lp->itemCount > 0)); // make sure lp exists & there are items in it
 
-	if(lp->head->count == 0){ // remove & deallocate memory for head if it is empty	
+	if(lp->head->full == 0){ // remove & deallocate memory for head if it is empty	
 		NODE *delNode = lp->head;
 		lp->head = lp->head->next;
 		lp->head->prev = NULL;
@@ -199,7 +200,7 @@ void *removeFirst(LIST *lp) {
 	}
 
 	lp->itemCount -= 1; // decrement num items
-	lp->head->count -= 1; // decrement count
+	lp->head->full -= 1; // decrement full
 
 	return temp; // return item removed
 }
@@ -211,7 +212,7 @@ runtime: O(1)
 void *removeLast(LIST *lp) {
 	assert((lp != NULL) && (lp->itemCount > 0)); // make sure lp exists & there are items in it
 
-	if(lp->tail->count == 0){ // remove & deallocate memory for tail if it is empty
+	if(lp->tail->full == 0){ // remove & deallocate memory for tail if it is empty
 		NODE *delNode = lp->tail;
 		lp->tail = lp->tail->prev;
 		lp->tail->next = NULL;
@@ -219,14 +220,14 @@ void *removeLast(LIST *lp) {
 		free(delNode);
 	}
 
-	void* temp = lp->tail->array[(lp->tail->count + lp->tail->first -1) % lp->tail->size]; //create a temporary value to store the last element
+	void* temp = lp->tail->array[(lp->tail->full + lp->tail->first -1) % lp->tail->size]; //create a temporary value to store the last element
 
 	if(--lp->tail->last < 0){
 		lp->tail->last = lp->tail->size - 1;
 	}
 
 	lp->itemCount -= 1; // decrement num items
-	lp->tail->count -= 1; // decrement full
+	lp->tail->full -= 1; // decrement full
 
 	return temp; // return removed item
 }
@@ -239,8 +240,8 @@ void *getItem(LIST *lp, int index) {
 	assert((lp != NULL) && (index >= 0) && (lp->itemCount > 0) && (index < lp->itemCount));
 
 	NODE *pCur = lp->head; // current node
-	while(index >= pCur->count){ // go through list until index could be in a node
-		index = index - pCur->count;
+	while(index >= pCur->full){ // go through list until index could be in a node
+		index = index - pCur->full;
 		pCur = pCur->next;
 	}
 	
@@ -255,8 +256,8 @@ void setItem(LIST *lp, int index, void *item) {
 	assert((lp != NULL) && (index >= 0) && (lp->itemCount > 0) && (index < lp->itemCount));
 
 	NODE *pCur = lp->head; // current node
-	while(index >= pCur->count){ // go through list until index could be in a node
-		index = index - (pCur->count);
+	while(index >= pCur->full){ // go through list until index could be in a node
+		index = index - (pCur->full);
 		pCur = pCur->next;
 	}
 
