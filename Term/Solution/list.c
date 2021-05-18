@@ -91,8 +91,15 @@ LIST *createList(void) {
 	lp->head = malloc(sizeof(NODE)); // pointer to first node in list (empty right now)
 	assert(lp->head != NULL); // make sure head exists
 
-	lp->tail = malloc(sizeof(NODE)); // pointer to last node in list (empty right now)
-	assert(lp->tail != NULL); // make sure tail exists
+	lp->head->first = 0; // intialize the indices of the front of the queue as 0
+
+	lp->head->count = 0; // number of full slots is zero at start
+	lp->head->size = 64; // make 64 slots available for the first node
+
+	//allocate a void* array with as many indices as their are "slots"
+	lp->head->array = malloc(sizeof(void*) * 64);
+
+	lp->tail = lp->head; // set tail to head, as list is empty right now
 
 	return lp; // return pointer to a new list
 }
@@ -243,8 +250,8 @@ runtime: O(n)
 */
 void setItem(LIST *lp, int index, void *item)
 {
-	assert(lp!=NULL && index>=0 && index<lp->itemCount);
+	assert(lp != NULL && index>=0 && index < lp->itemCount);
 	int loc = 0;
 	NODE *p = search(lp, index, &loc);
-	p->array[(p->first+loc)%p->size]=item;
+	p->array[(p->first+loc) % p->size]=item;
 }
