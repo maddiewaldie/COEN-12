@@ -268,3 +268,12 @@ void *getItem(LIST *lp, int index) {
 	NODE * node = search(lp, index, &loc); // will update loc & return a node
 	return node->array[(node->first + loc)% node->size]; // return the item at position index in the list pointed to by lp
 }
+
+/*
+setItem:
+runtime:
+*/
+
+void setItem(LIST *lp, int index, void *item) {
+	assert((lp != NULL) && (index >= 0) && (index < lp->itemCount));
+}
