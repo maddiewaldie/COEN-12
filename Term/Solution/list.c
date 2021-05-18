@@ -251,6 +251,22 @@ void *getItem(LIST *lp, int index) {
 	return node->array[(node->first + loc)% node->size]; // return the item at position index in the list pointed to by lp
 }
 
+/*
+setItem: update the item at position index in the list pointed by lp (the index must be within range)
+runtime: O(n)
+*/
+void setItem(LIST *lp, int index, void *item) {
+	assert((lp != NULL) && (index >= 0) && (lp->itemCount > 0) && (index < lp->itemCount));
+
+	NODE *pCur = lp->head; // current node
+	while(index >= pCur->count){ // go through list until index could be in a node
+		index = index - (pCur->count);
+		pCur = pCur->next;
+	}
+
+	pCur->array[(pCur->first + index) % pCur->size] = item; //update the item at the given index
+}
+
 // # include <stdio.h>
 // # include <stdlib.h>
 // # include <string.h>
