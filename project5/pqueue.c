@@ -1,7 +1,7 @@
 /* COEN 12 Project 5 - File: pqueue.c
  * Author: Madeleine Waldie
  * Due Date: 5/30/21
- */ 
+ */  
 
 # include <stdio.h>
 # include <stdlib.h>

@@ -20,7 +20,6 @@ typedef struct node {
 
 	int first; // index of first slot in array
 	int last; // index of last slot in array
-	int count; // number of items in array
 	int size; //how many indices there are in this node
 	int full; //how many indices are full in this node
 } NODE;
