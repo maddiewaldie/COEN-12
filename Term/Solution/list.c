@@ -236,3 +236,15 @@ void *getItem(LIST *lp, int index) {
 	NODE * node = search(lp, index, &loc); // will update loc & return a node
 	return node->array[(node->first + loc)% node->size]; // return the item at position index in the list pointed to by lp
 }
+
+/*
+setItem: ensures that the index is within the bounds of the list; It receives the proper location of the index with regards to which node it is in and which index it is in within the node's array; Then, it changes the value within the array to item
+runtime: O(n)
+*/
+void setItem(LIST *lp, int index, void *item)
+{
+	assert(lp!=NULL && index>=0 && index<lp->itemCount);
+	int loc = 0;
+	NODE *p = search(lp, index, &loc);
+	p->array[(p->first+loc)%p->size]=item;
+}
