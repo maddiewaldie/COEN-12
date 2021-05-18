@@ -11,6 +11,8 @@
 # include <math.h>
 # include "list.h"
 
+#define ARRAY_SIZE 2500
+
 // DATA STRUCTURES
 typedef struct node {
 	void **array; // array of items held at location
@@ -56,24 +58,24 @@ return NULL;
 createNode: sets up a new node & returns it
 runtime: O(1)
 */
-NODE *createNode(LIST *lp) {
-	NODE *newNode = malloc(sizeof(NODE));
-	assert(newNode != NULL);
+// NODE *createNode(LIST *lp) {
+// 	NODE *newNode = malloc(sizeof(NODE));
+// 	assert(newNode != NULL);
 
-	newNode->count = 0; // set current count of items in array to zero
-	newNode->size = pow(1,lp->nodeCount); //set size of array (dynamically increase size of arrays as you add new nodes)
-	newNode->first = 0; // index of first element (empty right now)
+// 	newNode->count = 0; // set current count of items in array to zero
+// 	newNode->size = ARRAY_SIZE; //set size of array (dynamically increase size of arrays as you add new nodes)
+// 	newNode->first = 0; // index of first element (empty right now)
 
-	newNode->array = malloc(sizeof(void)* newNode->size); // allocate memory for the array
-	assert(newNode->array != NULL); // make sure the array exists
+// 	newNode->array = malloc(sizeof(void)* ARRAY_SIZE); // allocate memory for the array
+// 	assert(newNode->array != NULL); // make sure the array exists
 
-	newNode->prev = NULL;
-	newNode->next = NULL;
+// 	newNode->prev = NULL;
+// 	newNode->next = NULL;
 
-	lp->nodeCount++; // increase count of nodes in list
+// 	lp->nodeCount++; // increase count of nodes in list
 	
-	return newNode; // return new node
-}
+// 	return newNode; // return new node
+// }
 
 // FUNCTIONS FROM PROJECT INSTRUCTIONS
 
@@ -129,13 +131,28 @@ runtime: O(1)
 void addFirst(LIST *lp, void *item) {
 	assert((lp!=NULL) && (item!=NULL)); // make sure lp & item exist
 
+	NODE *newNode = malloc(sizeof(NODE));
+	assert(newNode != NULL);
+
+	newNode->count = 0; // set current count of items in array to zero
+	newNode->size = ARRAY_SIZE; //set size of array (dynamically increase size of arrays as you add new nodes)
+	newNode->first = 0; // index of first element (empty right now)
+
+	newNode->array = malloc(sizeof(void)* ARRAY_SIZE); // allocate memory for the array
+	assert(newNode->array != NULL); // make sure the array exists
+
+	newNode->prev = NULL;
+	newNode->next = NULL;
+
+	lp->nodeCount++; // increase count of nodes in list
+
 	if(lp->nodeCount == 0) { // if there are no nodes, add the first node
-		NODE *firstNode = createNode(lp); // first node in array
+		NODE *firstNode = newNode; // first node in array
 		lp->head = firstNode; // make head point to first node
 		lp->tail = firstNode; // because this will be only node in list, also set tail to point to firstNode	
 	}
 	else if(lp->head->count==lp->head->size) { // if the first node is full, then a new node is allocated and set as the new head
-		NODE *newFirstNode = createNode(lp); // create new first node
+		NODE *newFirstNode = newNode; // create new first node
 		newFirstNode->next = lp->head;
 		lp->head->prev = newFirstNode;
 		lp->head = newFirstNode; // make head point to new first node
@@ -155,13 +172,28 @@ runtime: O(1)
 void addLast(LIST *lp, void *item) {
 	assert((lp!=NULL) && (item!=NULL)); // make sure lp & item exist
 
+	NODE *newNode = malloc(sizeof(NODE));
+	assert(newNode != NULL);
+
+	newNode->count = 0; // set current count of items in array to zero
+	newNode->size = ARRAY_SIZE; //set size of array (dynamically increase size of arrays as you add new nodes)
+	newNode->first = 0; // index of first element (empty right now)
+
+	newNode->array = malloc(sizeof(void)* ARRAY_SIZE); // allocate memory for the array
+	assert(newNode->array != NULL); // make sure the array exists
+
+	newNode->prev = NULL;
+	newNode->next = NULL;
+
+	lp->nodeCount++; // increase count of nodes in list
+
 	if(lp->nodeCount==0) { // if there are no nodes, add the first node 
-		NODE *firstNode = createNode(lp); // first node in array is same as last node
+		NODE *firstNode = newNode; // first node in array is same as last node
 		lp->head=firstNode; // make head point to node
 		lp->tail=firstNode; // make tail point to node
 	}
 	else if(lp->tail->count == lp->head->size) { // if the last node is full, then a new node is allocated and set as the new tail
-		NODE *newTailNode = createNode(lp); // create new tail node
+		NODE *newTailNode = newNode; // create new tail node
 		newTailNode->prev = lp->tail;
 		lp->tail->next = newTailNode;
 		lp->tail = newTailNode; // make tail point to new tail node
