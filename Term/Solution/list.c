@@ -69,25 +69,15 @@ destroyList: deallocate memory associated with the list pointed to by lp
 runtime: O(n)
 */
 void destroyList(LIST *lp) {
-	// assert(lp != NULL); // make sure lp exists
-	// NODE *pCur = lp->head; // first node in list
-	// NODE *pDel; // to keep track of deleted node
-
-	// while(pCur != NULL) { // go through list
-	// 	pDel = pCur->next; // assign node to be deleted next
-	// 	free(pCur->array); // free current node's data
-	// 	free(pCur); // free current node
-	// 	pCur = pDel; // set current node to next node to be deleted
-	// }
-
-	// free(lp); // free whole list
-
 	assert(lp != NULL); // make sure lp exists
-	NODE *node = lp->head; // first node in list
+	NODE *pCur = lp->head; // first node in list
+	NODE *pDel; // to keep track of deleted node
 
-	while(node != NULL) { // go through list
-		free(node->array); // free array at each node
-		node = node->next; // move on to next node
+	while(pCur != NULL) { // go through list
+		pDel = pCur->next; // assign node to be deleted next
+		free(pCur->array); // free current node's data
+		free(pCur); // free current node
+		pCur = pDel; // set current node to next node to be deleted
 	}
 
 	free(lp); // free whole list
