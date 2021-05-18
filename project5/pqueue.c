@@ -50,7 +50,7 @@ void destroyQueue(PQ *pq) {
 	int i; // for loop iterator
 
 	for (i = 0; i < pq->count; i++) { // go through pq
-        free(pq->data[i]); // deallocate memory for data at each index
+        free(pq->data[i]); // deallocate memory for data at each i
     }
 	free(pq->data); // deallocate memory for data as a whole
 	free(pq); // deallocate memory for pq
@@ -78,13 +78,13 @@ void addEntry(PQ *pq, void *entry) {
 	}
 
 	pq->data[pq->count] = entry; // add the entry to the end of data
-	int index = pq->count; // to keep track of where we are in the array in while loop
+	int i = pq->count; // to keep track of where we are in the array in while loop
 
-	while (pq->compare(pq->data[index], pq->data[p(index)]) < 0) {	// reheap up; continually compare with parent; if child is smaller than parent, then we swap
-		void* temp = pq->data[p(index)];
-		pq->data[p(index)] = pq->data[index];
-		pq->data[index] = temp;
-		index = p(index);
+	while (pq->compare(pq->data[i], pq->data[P(i)]) < 0) {	// reheap up; continually compare with parent; if child is smaller than parent, then we swap
+		void* temp = pq->data[P(i)];
+		pq->data[P(i)] = pq->data[i];
+		pq->data[i] = temp;
+		i = P(i);
 	}
 	pq->count++; // increase count of elements in pq
 }
@@ -95,26 +95,26 @@ runtime: O(logn)
 */
 void *removeEntry(PQ *pq) {
     void* root = pq->data[0]; // root is first element in array
-	int index = 0, smallestIndex = 0; // index to track the index we are at when we swap; smallestIndex to see which child is smallest
-	pq->data[index] = pq->data[pq->count-1]; // replace the first element with the last
+	int i = 0, smallestIndex = 0; // i to track the i we are at when we swap; smallestIndex to see which child is smallest
+	pq->data[i] = pq->data[pq->count-1]; // replace the first element with the last
 	pq->count--; // decrement the number of entries in array
 
-	while (l(index) < pq->count) { // loop through pq while we still have a left child
-		smallestIndex = l(index); // set current smallest indx to index of left child
+	while (L(i) < pq->count) { // loop through pq while we still have a left child
+		smallestIndex = L(i); // set current smallest indx to i of left child
 
-		if (r(index)<pq->count) { // right child; compare between the two children
-			if (pq->compare(pq->data[l(index)], pq->data[r(index)]) < 0){
-				smallestIndex = l(index); // left child is smaller
+		if (R(i)<pq->count) { // right child; compare between the two children
+			if (pq->compare(pq->data[L(i)], pq->data[R(i)]) < 0){
+				smallestIndex = L(i); // left child is smaller
 			} else {
-				smallestIndex = r(index); // right child is smaller
+				smallestIndex = R(i); // right child is smaller
 			}
 		}
 		
-		if (pq->compare(pq->data[smallestIndex], pq->data[index]) < 0) { //if it is smaller than the parent, then we swap
+		if (pq->compare(pq->data[smallestIndex], pq->data[i]) < 0) { //if it is smaller than the parent, then we swap
 			void* temp = pq->data[smallestIndex];
-			pq->data[smallestIndex] = pq->data[index];
-			pq->data[index] = temp;
-			index = smallestIndex;											
+			pq->data[smallestIndex] = pq->data[i];
+			pq->data[i] = temp;
+			i = smallestIndex;											
 		}
 		else { // otherwise go out of loop
 			break;
