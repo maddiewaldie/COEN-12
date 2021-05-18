@@ -11,9 +11,7 @@
 # include <math.h>
 # include "list.h"
 
-#define ARRAY_SIZE 2500
-
-// DATA STRUCTURES
+// data structures
 typedef struct node {
 	void **array; // array of items held at location
 
@@ -35,54 +33,6 @@ typedef struct list {
 	NODE *tail; // pointer to last node in list
 } LIST;
 
-// MY ADDITIONAL FUNCTIONS
-
-/* 
-search: goes through list starting from head & ending at tail, returning the node at which the item at position index is located
-runtime: O(n)
-*/
-NODE *search(LIST *lp, int index, int *loc) {
-	NODE *node = lp->head; // start at first node
-	int i; // for loop counter
-
-	for(i = 0; i < lp->itemCount; i += node->count, node = node->next) { // loop through nodes
-		if(index < node->count) {
-			*loc = index; // update loc to be index
-			return node;
-		}		
-		else
-			index -= node->count;
-	}
-return NULL;
-}
-
-/*
-createNode: sets up a new node & returns it
-runtime: O(1)
-*/
-// NODE *createNode(LIST *lp) {
-// 	NODE *newNode = malloc(sizeof(NODE));
-// 	assert(newNode != NULL);
-
-// 	newNode->count = 0; // set current count of items in array to zero
-	
-// 	//newNode->size = (lp->itemCount != 0) ? (lp->itemCount * lp->itemCount) : ARRAY_SIZE;
-// 	newNode->size = pow(1, lp->nodeCount); //set size of array (dynamically increase size of arrays as you add new nodes)
-// 	newNode->first = 0; // index of first element (empty right now)
-
-// 	newNode->array = malloc(sizeof(void)* newNode->size); // allocate memory for the array
-// 	assert(newNode->array != NULL); // make sure the array exists
-
-// 	newNode->prev = NULL;
-// 	newNode->next = NULL;
-
-// 	lp->nodeCount++; // increase count of nodes in list
-	
-// 	return newNode; // return new node
-// }
-
-// FUNCTIONS FROM PROJECT INSTRUCTIONS
-
 /*
 createList: return a pointer to a new list
 runtime: O(1)
@@ -97,22 +47,20 @@ LIST *createList(void) {
 	lp->head = malloc(sizeof(NODE));
 	assert(lp->head != NULL);
 
-	//initialize next and prev pointers
-	lp->head->next = NULL;
-	lp->head->prev = NULL;
+	lp->head->next = NULL; //initialize next to be NULL
+	lp->head->prev = NULL; //initialize next to be NULL
 	
-	//intialize the indices of the front and the back of the queue as 0
-	lp->head->first = 0;
-	lp->head->last = 0;
+	
+	lp->head->first = 0; // intialize the indices of the front of the queue as 0
+	lp->head->last = 0; // intialize the indices of the back of the queue as 0
 
-	//intitialize the number of full slots as 0 out of a total of 64 for the first node
-	lp->head->full = 0;
-	lp->head->size = 64;
+	lp->head->full = 0; // number of full slots is zero at start
+	lp->head->size = 64; // make 64 slots available for the first node
 
 	//allocate a void* array with as many indices as their are "slots"
 	lp->head->array = malloc(sizeof(void*) * 64);
 
-	lp->tail = lp->head;
+	lp->tail = lp->head; // set tail to head, as list is empty right now
 
 	return lp; // return pointer to a new list
 }
@@ -124,13 +72,13 @@ runtime: O(n)
 void destroyList(LIST *lp) {
 	assert(lp != NULL); // make sure lp exists
 	NODE *pCur = lp->head; // first node in list
-	NODE *pDel;
+	NODE *pDel; // to keep track of deleted node
 
 	while(pCur != NULL) { // go through list
-		pDel = pCur->next;
-		free(pCur->array);
-		free(pCur);
-		pCur = pDel;
+		pDel = pCur->next; // assign node to be deleted next
+		free(pCur->array); // free current node's data
+		free(pCur); // free current node
+		pCur = pDel; // set current node to next node to be deleted
 	}
 
 	free(lp); // free whole list
@@ -150,54 +98,39 @@ addFirst: add item as the first item in the list pointed to by lp
 runtime: O(1)
 */
 void addFirst(LIST *lp, void *item) {
-	assert(lp != NULL);
+	assert(lp != NULL); // make sure lp exists
 
-	//if the head node is full then allocate a new node to accomodate new data
-	if((lp->head->full) >= (lp->head->size)){
+	if((lp->head->full) >= (lp->head->size)){ //if the head is full, allocate a new node for more data
 
-		NODE *newNode = malloc(sizeof(NODE));
+		NODE *newNode = malloc(sizeof(NODE)); // new node
 
 		//put the new node in the linked list by reassigning pointers
 		newNode->next = lp->head;
 		newNode->prev = NULL;
 		lp->head->prev = newNode;
 
-		//initialize the number of slots for the new node
-		newNode->full = 0;
-		int newSlots = 2 * (lp->head->size);
-	
-		//set the newNode as the head of the linked list
-		lp->head = lp->head->prev;
+		newNode->full = 0; // node is currently empty
+		int newSize = 2 * (lp->head->size); // make new amount of slots equal double current size
+		lp->head = lp->head->prev; //set the newNode as head
+		lp->head->size = newSize; //update size
 
-		//update slots
-		lp->head->size = newSlots;
+		lp->head->array = malloc(sizeof(void*) * (newSize)); // allocate memory for an array of twice the size of the prev array
+		assert(newNode-> array != NULL); // make sure array exists
 
-		//allocate an array of void* twice the size of the array in the node to the right
-		lp->head->array = malloc(sizeof(void*) * (newSlots));
-		assert(newNode-> array != NULL);
-
-		//increment the counter of the number of nodes
-		lp->nodeCount += 1;
+		lp->nodeCount += 1; // increment number of nodes
 	}
 
-	//make sure there is still room in the queue to add an item (count<length)
-	assert((lp->head->full) < (lp->head->size));
+	assert((lp->head->full) < (lp->head->size)); //make sure there's room to add an item
 
-	//decrease the index of the "first index"
-	lp->head->first--;
+	lp->head->first--; //decrease the index of first
 	if(lp->head->first < 0){
-		lp->head->first = lp->head->size - 1;
+		lp->head->first = lp->head->size - 1; //new first index is to the left of the current first index
 	}
-
-	//put the item in the front of the queue in the current node
-	//first represents the first index of the queue (not the array)
-	//new first index is to the left of the current first index
-	//lp->head->first = ((lp->head->first) - 1) % lp->head->slots;
-	lp->head->array[lp->head->first] = item;
 	
-	//update counters etc.
-	lp->head->full += 1;
-	lp->itemCount += 1;
+	lp->head->array[lp->head->first] = item; //put the item in the front of the queue in the current node
+	
+	lp->head->full += 1; // update full
+	lp->itemCount += 1; // update item count
 
 	return;
 }
@@ -207,40 +140,29 @@ addLast: add item as the last item in the list pointed to by lp
 runtime: O(1)
 */
 void addLast(LIST *lp, void *item) {
-	assert(lp != NULL);
+	assert(lp != NULL); // make sure lp exists
+	int index; // variable to track index
+
+	if((lp->tail->full) >= (lp->tail->size)){ // if tail is full then create a new node
+		NODE *newNode = malloc(sizeof(NODE)); // allocate memory for new node
+
+		newNode->next = NULL; // next is null because it's at end of list
+		newNode->prev = lp->tail; // previous is old tail
+		lp->tail->next = newNode; // add new node to list
+
+		newNode->full = 0; // empty array currently
+		int newSlots = 2 * (lp->tail->size); // double size of array
+
+		lp->tail = lp->tail->next; // make new node tail
+
+		lp->tail->size = newSlots; // update size
 	
-	int index;
+		newNode->array = malloc(sizeof(void*) * (newSlots)); // allocate memory for an array of twice the size of the prev array
+		assert(newNode->array != NULL); // make sure array exists
 
-	//if the tail node is full then allocate a new node to accomodate new data
-	if((lp->tail->full) >= (lp->tail->size)){
-
-		NODE *newNode = malloc(sizeof(NODE));
-
-		//put the new node in the linked list by reassigning pointers
-		newNode->next = NULL;
-		newNode->prev = lp->tail;
-		lp->tail->next = newNode;
-
-		//initialize the number of slots for the new node
-		newNode->full = 0;
-		int newSlots = 2 * (lp->tail->size);
-
-		//set the newNode as the tail of the linked list
-		lp->tail = lp->tail->next;
-
-		//update slots
-		lp->tail->size = newSlots;
-	
-		//allocate an array of void* twice the size of the array in the node to the left
-		newNode->array = malloc(sizeof(void*) * (newSlots));
-		assert(newNode->array != NULL);
-
-		//increment the counter of the number of nodes
-		lp->nodeCount += 1;
+		lp->nodeCount += 1; // increment num nodes
 	}
-
-	//make sure there is still room in the queue to add an item (count<length)
-	assert((lp->tail->full) < (lp->tail->size));
+	assert((lp->tail->full) < (lp->tail->size)); // make sure item can be added
 
 	//find the index where the last element should go
 	index = lp->tail->first + lp->tail->full;
@@ -248,16 +170,10 @@ void addLast(LIST *lp, void *item) {
 		index = index - lp->tail->size;
 	}
 
-	//insert the item
-	lp->tail->array[index] = item;
-	
-	//update counters etc.
-	lp->head->full += 1;
-	lp->itemCount += 1;
-
-	//lp->tail->data[((lp->tail->full) + (lp->tail->first)) % lp->tail->slots] = item;
-	//update the "last" index number	
-	lp->tail->last = ((lp->head->first) + (lp->head->full)) % lp->head->size;
+	lp->tail->array[index] = item; //insert item
+	lp->head->full += 1; // increment full
+	lp->itemCount += 1; // increment num items
+	lp->tail->last = ((lp->head->first) + (lp->head->full)) % lp->head->size; // reassign last (use formula from lab handout)
 
 	return;
 }
@@ -267,14 +183,9 @@ removeFirst: remove and return the first item in the list pointed to by lp ; the
 runtime: O(1)
 */
 void *removeFirst(LIST *lp) {
-	assert(lp != NULL);
+	assert((lp != NULL) && (lp->itemCount > 0)); // make sure lp exists & there are items in it
 
-	//check that there is an item to remove and return
-	assert(lp->itemCount > 0);
-
-	//remove the head node if it is empty	
-	if(lp->head->full == 0){
-
+	if(lp->head->full == 0){ // remove & deallocate memory for head if it is empty	
 		NODE *delNode = lp->head;
 		lp->head = lp->head->next;
 		lp->head->prev = NULL;
@@ -282,20 +193,16 @@ void *removeFirst(LIST *lp) {
 		free(delNode);
 	}
 
-	//store the first value in a temporary variable
-	void* temp = lp->head->array[lp->head->first];
-	
-	//free(lp->head->data[lp->head->first]);
-	
-	//update the "first" index
-	if(++lp->head->first >= lp->head->size)
+	void* temp = lp->head->array[lp->head->first]; //store the first value in a temporary variable
+
+	if(++lp->head->first >= lp->head->size) { //update the "first" index
 		lp->head->first = 0;
+	}
 
-	//lp->head->first = ((lp->head->first) + 1) % lp->head->slots;
-	lp->itemCount -= 1;
-	lp->head->full -= 1;
+	lp->itemCount -= 1; // decrement num items
+	lp->head->full -= 1; // decrement full
 
-	return temp;
+	return temp; // return item removed
 }
 
 /*
@@ -303,14 +210,9 @@ removeLast: remove and return the last item in the list pointed to by lp ; the l
 runtime: O(1)
 */
 void *removeLast(LIST *lp) {
-	assert(lp != NULL);
-	
-	//check that there is an item to remove and return
-	assert(lp->itemCount > 0);
+	assert((lp != NULL) && (lp->itemCount > 0)); // make sure lp exists & there are items in it
 
-	//remove the tail node if it is no longer needed
-	if(lp->tail->full == 0){
-		
+	if(lp->tail->full == 0){ // remove & deallocate memory for tail if it is empty
 		NODE *delNode = lp->tail;
 		lp->tail = lp->tail->prev;
 		lp->tail->next = NULL;
@@ -318,19 +220,16 @@ void *removeLast(LIST *lp) {
 		free(delNode);
 	}
 
-	//create a temporary value to store the last element
-	void* temp = lp->tail->array[(lp->tail->full + lp->tail->first -1) % lp->tail->size];
-
-	//free(lp->tail->data[lp->tail->last]);
+	void* temp = lp->tail->array[(lp->tail->full + lp->tail->first -1) % lp->tail->size]; //create a temporary value to store the last element
 
 	if(--lp->tail->last < 0){
 		lp->tail->last = lp->tail->size - 1;
 	}
 
-	lp->itemCount -= 1;
-	lp->tail->full -= 1;
+	lp->itemCount -= 1; // decrement num items
+	lp->tail->full -= 1; // decrement full
 
-	return temp;
+	return temp; // return removed item
 }
 
 /*
@@ -338,44 +237,29 @@ getItem: return the item at position index in the list pointed to by lp ; the in
 runtime: O(n)
 */
 void *getItem(LIST *lp, int index) {
-	assert(lp != NULL);
-	assert(index >= 0);
-	assert(lp->itemCount > 0);
-	
-	//make sure the index is less than the total number of elements
-	assert(index < lp->itemCount);
+	assert((lp != NULL) && (index >= 0) && (lp->itemCount > 0) && (index < lp->itemCount));
 
-	//traverse linked list looking for the node that has the
-	//array with the index that we are looking for
-	NODE *pCur = lp->head;
-	while(index >= pCur->full){
-
+	NODE *pCur = lp->head; // current node
+	while(index >= pCur->full){ // go through list until index could be in a node
 		index = index - pCur->full;
 		pCur = pCur->next;
 	}
 	
-	return pCur->array[(pCur->first + index) % pCur->size];
+	return pCur->array[(pCur->first + index) % pCur->size]; // return item at index
 }
 
 /*
-setItem:
-runtime:
+setItem: update the item at position index in the list pointed by lp (the index must be within range)
+runtime: O(n)
 */
 void setItem(LIST *lp, int index, void *item) {
-	assert(lp != NULL);	
+	assert((lp != NULL) && (index >= 0) && (lp->itemCount > 0) && (index < lp->itemCount));
 
-	//make sure the index is less than the total number of elements
-	assert(index >= 0 && index < lp->itemCount);
-
-	//like above, traverse the linked list looking for the node that has
-	//the array with the index we are looking for
-	NODE *pCur = lp->head;
-	while(index >= pCur->full){
-
+	NODE *pCur = lp->head; // current node
+	while(index >= pCur->full){ // go through list until index could be in a node
 		index = index - (pCur->full);
 		pCur = pCur->next;
 	}
 
-	//update the item at the given index
-	pCur->array[(pCur->first + index) % pCur->size] = item;
+	pCur->array[(pCur->first + index) % pCur->size] = item; //update the item at the given index
 }
