@@ -39,17 +39,26 @@ runtime: O(n)
 */
 NODE *search(LIST *lp, int index, int *loc) {
 	NODE *node = lp->head; // start at first node
-	int i; // for loop counter
 
-	for(i = 0; i < lp->itemCount; i += node->count, node = node->next) { // loop through nodes
-		if(index < node->count) {
-			*loc = index; // update loc to be index
-			return node;
-		}		
-		else
-			index -= node->count;
+	int i; // counter
+	
+	while((index > node->count) && (i < lp->itemCount)) {
+		index -= node->count;
+		node = node->next;
+		i += node->count;
 	}
-return NULL;
+	*loc = index; // update loc to be index
+	return node;
+
+// 	for(i = 0; i < lp->itemCount; i += node->count, node = node->next) { // loop through nodes
+// 		if(index < node->count) {
+// 			*loc = index; // update loc to be index
+// 			return node;
+// 		}		
+// 		else
+// 			index -= node->count;
+// 	}
+// return NULL;
 }
 
 /*
@@ -199,7 +208,7 @@ void *removeFirst(LIST *lp) {
 	}
 
 	itemToDelete = lp->head->array[lp->head->first]; // delete first element
-	lp->head->first = (lp->head->first+1) % lp->head->size; // reset first pointer to new first element
+	lp->head->first = (lp->head->first + 1) % lp->head->size; // reset first pointer to new first element
 
 	lp->head->count--; // decrement count of items in array by one
 	lp->itemCount--; // decrement count of items in list by one
@@ -225,7 +234,7 @@ void *removeLast(LIST *lp) {
 	}
 
 	itemToDelete=lp->tail->array[lp->tail->first]; // delete last element
-	lp->tail->first = (lp->tail->first+1)%lp->tail->size; // reset first pointer to new first element
+	lp->tail->first = (lp->tail->first + 1) % lp->tail->size; // reset first pointer to new first element
 
 	lp->tail->count--; // decrement count of items in array by one
 	lp->itemCount--; // decrement count of items in list by one
@@ -241,7 +250,7 @@ void *getItem(LIST *lp, int index) {
 	assert((lp != NULL) && (index >= 0) && (index < lp->itemCount)); // make sure lp exists & that index is within range
 	int loc = 0;
 	NODE * node = search(lp, index, &loc); // will update loc & return a node
-	return node->array[(node->first + loc)% node->size]; // return the item at position index in the list pointed to by lp
+	return node->array[(node->first + loc - 1)% node->size]; // return the item at position index in the list pointed to by lp
 }
 
 /*
@@ -253,5 +262,5 @@ void setItem(LIST *lp, int index, void *item)
 	assert(lp != NULL && index>=0 && index < lp->itemCount);
 	int loc = 0;
 	NODE *p = search(lp, index, &loc);
-	p->array[(p->first+loc) % p->size]=item;
+	p->array[(p->first + loc - 1) % p->size] = item;
 }
