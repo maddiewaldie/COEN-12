@@ -59,7 +59,7 @@ NODE *createNode(LIST *lp) {
 	assert(newNode != NULL);
 
 	newNode->count = 0; // set current count of items in array to zero
-	newNode->size = 2 * (lp->nodeCount); //set size of array (dynamically increase size of arrays as you add new nodes)
+	newNode->size = 2 * (lp->itemCount); //set size of array (dynamically increase size of arrays as you add new nodes)
 	newNode->first = 0; // index of first element (empty right now)
 	
 	newNode->array = malloc(sizeof(void)* newNode->size); // allocate memory for the array
@@ -83,7 +83,7 @@ LIST *createList(void) {
 	LIST *lp = malloc(sizeof(LIST)); // allocate memory for list lp
 	assert(lp != NULL); // make sure lp exists
 
-	lp->nodeCount = 0; // initialize number of nodes in list (empty = 0)
+	lp->nodeCount = 1; // initialize number of nodes in list (empty = 0)
 	lp->itemCount = 0; // initialize number of items in list (empty = 0)
 
 	lp->head = malloc(sizeof(NODE)); // pointer to first node in list (empty right now)
@@ -92,9 +92,9 @@ LIST *createList(void) {
 	lp->head->first = 0; // intialize the indices of the front of the queue as 0
 
 	lp->head->count = 0; // number of full slots is zero at start
-	lp->head->size = 64; // make 64 slots available for the first node
+	lp->head->size = 100; // make 100 slots available for the first node
 
-	lp->head->array = malloc(sizeof(void*) * 64); // allocate a void* array with as many indices as their are "slots"
+	lp->head->array = malloc(sizeof(void*) * 100); // allocate a void* array with as many indices as their are "slots"
 
 	lp->tail = lp->head; // set tail to head, as list is empty right now
 
@@ -148,7 +148,13 @@ void addFirst(LIST *lp, void *item) {
 		lp->head = newFirstNode; // make head point to new first node
 	}
 
-	int index = (lp->head->first + lp->head->count - 1) % lp->head->size; // index is (f +n − 1)%m (from lab handout)
+	//decrease the index of the first index
+	if(lp->head->count != 0){
+		lp->head->first = (lp->head->first + lp->head->size - 1) % lp->head->size;
+	}
+	//int index = lp->head->first;
+
+	int index = lp->head->first; //(lp->head->first + lp->head->count) % lp->head->size; // index is (f +n − 1)%m (from lab handout)
 	lp->head->array[index] = item; // add item at intended index
 
 	lp->head->count++; // increase count of number of items in array
@@ -174,7 +180,7 @@ void addLast(LIST *lp, void *item) {
 		lp->tail = newTailNode; // make tail point to new tail node
 	}
 
-	int index = (lp->tail->first + lp->tail->count - 1) % lp->tail->size; // index is (f +n − 1)%m (from lab handout)
+	int index = (lp->tail->first + lp->tail->count) % lp->tail->size; // index is (f +n − 1)%m (from lab handout)
 	lp->tail->array[index] = item; // add item at intended index
 
 	lp->tail->count++; // increase count of number of items in array
@@ -200,6 +206,11 @@ void *removeFirst(LIST *lp) {
 
 	itemToDelete = lp->head->array[lp->head->first]; // delete first element
 	lp->head->first = (lp->head->first + 1) % lp->head->size; // reset first pointer to new first element
+	
+	//lp->head->first++;
+	//if(lp->head->first >= lp->head->size) {
+	//	lp->head->first = 0;
+	//}	
 
 	lp->head->count--; // decrement count of items in array by one
 	lp->itemCount--; // decrement count of items in list by one
