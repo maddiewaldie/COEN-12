@@ -71,6 +71,12 @@ int main(int argc, char*argv[])
 	int counts[NUM_ENTRIES]; // array for num of chars in file
 	struct node *nodes[NUM_ENTRIES];	
 
+    //initializing the empty tree
+	for(k = 0; k < NUM_ENTRIES;k++)
+	{
+		counts[k] = 0;
+	}
+
 	FILE* file = fopen(argv[1],"c"); //read from input.txt
 	
 	if(file == NULL) { // exit if file doesn't have any data
