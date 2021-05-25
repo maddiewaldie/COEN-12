@@ -152,7 +152,6 @@ void addFirst(LIST *lp, void *item) {
 	if(lp->head->count != 0){
 		lp->head->first = (lp->head->first + lp->head->size - 1) % lp->head->size;
 	}
-	//int index = lp->head->first;
 
 	int index = lp->head->first; //(lp->head->first + lp->head->count) % lp->head->size; // index is (f +n − 1)%m (from lab handout)
 	lp->head->array[index] = item; // add item at intended index
