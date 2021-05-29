@@ -213,6 +213,7 @@ static void buildMaze(int y, int x)
 	    cp = removeFirst(list);
 	    x = cp->x;
 	    y = cp->y;
+	    //printf("x: %d, y: %d \n", x, y);
 	    free(cp);
 
 	} else
