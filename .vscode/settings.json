@@ -10,6 +10,7 @@
         "tuple": "c",
         "__tuple": "c",
         "array": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "assert.h": "c"
     }
 }
