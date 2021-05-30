@@ -80,7 +80,6 @@ createList: return a pointer to a new list
 runtime: O(1)
 */
 LIST *createList(void) {
-	printf("begin create list");
 	LIST *lp = malloc(sizeof(LIST)); // allocate memory for list lp
 	assert(lp != NULL); // make sure lp exists
 
@@ -99,7 +98,6 @@ LIST *createList(void) {
 
 	lp->tail = lp->head; // set tail to head, as list is empty right now
 
-	printf("ending create list");
 	return lp; // return pointer to a new list
 }
 
@@ -108,7 +106,6 @@ destroyList: deallocate memory associated with the list pointed to by lp
 runtime: O(n)
 */
 void destroyList(LIST *lp) {
-	printf("begin destroy list");
 	assert(lp != NULL); // make sure lp exists
 	NODE *pCur = lp->head; // first node in list
 	NODE *pDel; // to keep track of deleted node
@@ -135,7 +132,6 @@ numItems: return the number of items in the list pointed to by lp
 runtime: O(1)
 */
 int numItems(LIST *lp) {
-	printf("begin num items");
 	assert(lp != NULL); // make sure lp exists
 	return lp->itemCount; // return number of items in the list
 }
@@ -145,7 +141,6 @@ addFirst: add item as the first item in the list pointed to by lp
 runtime: O(1)
 */
 void addFirst(LIST *lp, void *item) {
-	printf("begin add first");
 	assert((lp != NULL) && (item != NULL)); // make sure lp & item exist
 
 	if(lp->nodeCount == 0) { // if there are no nodes, add the first node
@@ -177,7 +172,6 @@ addLast: add item as the last item in the list pointed to by lp
 runtime: O(1)
 */
 void addLast(LIST *lp, void *item) {
-	printf("begin add last");
 	assert((lp!=NULL) && (item!=NULL)); // make sure lp & item exist
 
 	if(lp->nodeCount == 0) { // if there are no nodes, add the first node 
@@ -204,13 +198,11 @@ removeFirst: remove and return the first item in the list pointed to by lp ; the
 runtime: O(1)
 */
 void *removeFirst(LIST *lp) {
-	printf("begin remove first");
 	assert((lp != NULL) && (lp->itemCount > 0)); // make sure lp exists and isn't empty
 
 	void *itemToDelete; // create variable for item to be deleted
 
 	if(lp->head->count == 0) { // if the first node in list is empty, delete & deallocate memory of first node
-		printf("in first if statement");
 		NODE *pDel = lp->head;
 		lp->head = lp->head->next;
 		lp->head->prev = NULL;
@@ -222,18 +214,14 @@ void *removeFirst(LIST *lp) {
 	itemToDelete = lp->head->array[lp->head->first]; // delete first element
 	//lp->head->first = (lp->head->first + 1) % lp->head->size; // reset first pointer to new first element
 
-	printf("set item to delete");	
-
 	lp->head->first++;
 	if(lp->head->first == lp->head->size) {
 		lp->head->first = 0;
-		printf("in second if statement");
 	}	
 
 	lp->head->count--; // decrement count of items in array by one
 	lp->itemCount--; // decrement count of items in list by one
 
-	printf("end of remove first");
 	return itemToDelete; // return first item in list
 }
 
@@ -242,7 +230,6 @@ removeLast: remove and return the last item in the list pointed to by lp ; the l
 runtime: O(1)
 */
 void *removeLast(LIST *lp) {
-	printf("begin remove last");
 	assert((lp != NULL) && (lp->itemCount > 0)); // make sure lp exists and isn't empty
 
 	void *itemToDelete; // create variable for item to be deleted
@@ -261,7 +248,6 @@ void *removeLast(LIST *lp) {
 	lp->tail->count--; // decrement count of items in array by one
 	lp->itemCount--; // decrement count of items in list by one
 	
-	printf("end remove last");
 	return itemToDelete; // return last item in list
 }
 
@@ -270,11 +256,9 @@ getItem: return the item at position index in the list pointed to by lp ; the in
 runtime: O(n)
 */
 void *getItem(LIST *lp, int index) {
-	printf("begin get item");
 	assert((lp != NULL) && (index >= 0) && (index < lp->itemCount)); // make sure lp exists & that index is within range
 	int loc = 0;
 	NODE * node = search(lp, index, &loc); // will update loc & return a node (runtime of search: O(n))
-	printf("end get item");
 	return node->array[(node->first + loc - 1)% node->size]; // return the item at position index in the list pointed to by lp
 }
 
@@ -285,11 +269,9 @@ runtime: O(n)
 */
 void setItem(LIST *lp, int index, void *item)
 {
-	printf("begin set item");
 	assert(lp != NULL && index >= 0 && index < lp->itemCount); // make sure lp exists, there are items in the list, & the index is valid
 	int loc = 0;
 	NODE *p = search(lp, index, &loc); // will update loc & return a node (runtime of search: O(n))
 	p->array[(p->first + loc - 1) % p->size] = item; // set array at index to new item
-	printf("end set item");
 }
 
