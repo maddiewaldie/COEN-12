@@ -251,14 +251,16 @@ runtime: O(n)
 */
 static NODE *search(LIST *lp, int index, int *loc)
 {
-	NODE *node = lp->head; // start at first node
-	//int i= 0; // counter
-	
-	while(index > node->count) { // go through list until index could be found in a node's array
-		index -= node->count; // decrement index by the number of items in array
-		node = node->next; // move on to next node
-		//i += node->count; // increment i by the number of items in array
+	NODE *p=lp->head;
+	int i;
+	for(i=0;i<lp->itemCount;i+=p->count,p=p->next)
+	{
+		if(index<p->count)
+		{
+			*loc=index;
+			return p;
+		}		
+		else
+			index-=p->count;	
 	}
-	*loc = index; // update loc to be index
-	return node; // return node at which item at index is located
 }
