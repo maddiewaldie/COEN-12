@@ -11,6 +11,7 @@
         "__tuple": "c",
         "array": "c",
         "stdio.h": "c",
-        "assert.h": "c"
+        "assert.h": "c",
+        "stdlib.h": "c"
     }
 }
