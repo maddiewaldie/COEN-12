@@ -32,23 +32,73 @@ typedef struct list {
 } LIST;
 
 // MY ADDITIONAL FUNCTIONS
-static NODE *createNode(LIST *lp);
-static NODE *search(LIST *lp, int index, int *loc);
 
-// Allocates memory to the list structure, the head pointer, and the tail pointer
-// O(1)
+/*
+createNode: sets up a new node & returns it; useful because new nodes are created several times in code
+runtime: O(1)
+*/
+NODE *createNode(LIST *lp)
+{
+	NODE *newNode = malloc(sizeof(NODE)); // allocate memory for node
+	assert(newNode != NULL); // make sure node exists
+
+	newNode->count = 0; // initially empty, so count is 0
+	newNode->size = pow(1, lp->nodeCount); // size
+	newNode->first = 0; // first element is initially 0
+
+	newNode->array = malloc(sizeof(void)* newNode->size); // allocate memory for array
+	assert(newNode->array != NULL); // make sure array exists
+
+	newNode->prev = NULL; // set next prev node to null for now
+	newNode->next = NULL; // set next node to null for now
+
+	lp->nodeCount++; // increase node count
+
+	return newNode; // return new node created
+}
+
+/* 
+search: goes through list starting from head & ending at tail, returning the node at which the item at position index is located
+runtime: O(n)
+*/
+NODE *search(LIST *lp, int index, int *loc)
+{
+	NODE *node = lp->head; // start at first node
+	int i; // for loop iterator
+
+	for(i = 0; i < lp->itemCount; i += node->count, node = node->next) { // loop through list from head to tail
+		if(index < node->count) { // check if index could be found in a node's array
+			*loc = index; // this is the index in the array
+			return node; // return node with array of index
+		}		
+		else { // need to continue going through list
+			index -= node->count; // decrement index by the number of items in array	
+		}
+	}
+	return node;
+}
+
+// FUNCTIONS
+
+/*
+createList: return a pointer to a new list
+runtime: O(1)
+*/
 LIST *createList(void)
 {
-	LIST *lp;
-	lp = malloc(sizeof(LIST));
-	assert(lp!=NULL);
-	lp->nodeCount = 0;
-	lp->itemCount = 0;
-	lp->head = malloc(sizeof(NODE));
-	assert(lp->head != NULL);
-	lp->tail = malloc(sizeof(NODE));
-	assert(lp->tail != NULL);
-	return lp;
+	LIST *lp = malloc(sizeof(LIST)); // allocate memory for list lp
+	assert(lp != NULL); // make sure lp exists
+
+	lp->nodeCount = 0; // no nodes at beginning
+	lp->itemCount = 0; // no items in arrays at beginning
+
+	lp->head = malloc(sizeof(NODE)); // pointer to first node in list (empty right now)
+	assert(lp->head != NULL); // make sure head exists
+
+	lp->tail = malloc(sizeof(NODE)); // pointer to last node in list (empty right now)
+	assert(lp->tail != NULL); // make sure tail exists
+
+	return lp; // return pointer to a new list
 }
 
 /*
@@ -220,51 +270,4 @@ void setItem(LIST *lp, int index, void *item)
 	int loc = 0;
 	NODE *node = search(lp, index, &loc); // will update loc & return a node (runtime of search: O(n))
 	node->array[(node->first + loc) % node->size] = item; // set array at index to new item
-}
-
-// MY ADDITIONAL FUNCTIONS
-
-/*
-createNode: sets up a new node & returns it; useful because new nodes are created several times in code
-runtime: O(1)
-*/
-static NODE *createNode(LIST *lp)
-{
-	NODE *newNode = malloc(sizeof(NODE)); // allocate memory for node
-	assert(newNode != NULL); // make sure node exists
-
-	newNode->count = 0; // initially empty, so count is 0
-	newNode->size = pow(1, lp->nodeCount); // size
-	newNode->first = 0; // first element is initially 0
-
-	newNode->array = malloc(sizeof(void)* newNode->size); // allocate memory for array
-	assert(newNode->array != NULL); // make sure array exists
-
-	newNode->prev = NULL; // set next prev node to null for now
-	newNode->next = NULL; // set next node to null for now
-
-	lp->nodeCount++; // increase node count
-
-	return newNode; // return new node created
-}
-
-/* 
-search: goes through list starting from head & ending at tail, returning the node at which the item at position index is located
-runtime: O(n)
-*/
-static NODE *search(LIST *lp, int index, int *loc)
-{
-	NODE *node = lp->head; // start at first node
-	int i; // for loop iterator
-
-	for(i = 0; i < lp->itemCount; i += node->count, node = node->next) { // loop through list from head to tail
-		if(index < node->count) { // check if index could be found in a node's array
-			*loc = index; // this is the index in the array
-			return node; // return node with array of index
-		}		
-		else { // need to continue going through list
-			index -= node->count; // decrement index by the number of items in array	
-		}
-	}
-	return node;
 }
