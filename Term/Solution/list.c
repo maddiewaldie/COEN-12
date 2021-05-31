@@ -162,10 +162,9 @@ void *removeFirst(LIST *lp) {
 	}
 
 	itemToDelete = lp->head->array[lp->head->first]; // delete first element
-	//lp->head->first = (lp->head->first + 1) % lp->head->size; // reset first pointer to new first element
 
-	lp->head->first++;
-	if(lp->head->first == lp->head->size) {
+	lp->head->first++; // increment first
+	if(lp->head->first == lp->head->size) { // special case
 		lp->head->first = 0;
 	}	
 
@@ -193,7 +192,6 @@ void *removeLast(LIST *lp) {
 	}
 
 	itemToDelete = lp->tail->array[(lp->tail->first + lp->tail->count - 1) % lp->tail->size]; // delete last element
-	//lp->tail->first = (lp->tail->first + 1) % lp->tail->size; // reset first pointer to new first element
 
 	lp->tail->count--; // decrement count of items in array by one
 	lp->itemCount--; // decrement count of items in list by one
@@ -220,8 +218,8 @@ void setItem(LIST *lp, int index, void *item)
 {
 	assert(lp != NULL && index >= 0 && index < lp->itemCount); // make sure lp exists, there are items in the list, & the index is valid
 	int loc = 0;
-	NODE *p = search(lp, index, &loc); // will update loc & return a node (runtime of search: O(n))
-	p->array[(p->first + loc) % p->size] = item; // set array at index to new item
+	NODE *node = search(lp, index, &loc); // will update loc & return a node (runtime of search: O(n))
+	node->array[(node->first + loc) % node->size] = item; // set array at index to new item
 }
 
 // MY ADDITIONAL FUNCTIONS
@@ -232,17 +230,22 @@ runtime: O(1)
 */
 static NODE *createNode(LIST *lp)
 {
-	NODE *new=malloc(sizeof(NODE));
-	assert(new!=NULL);
-	new->count=0;
-	new->size=pow(1, lp->nodeCount);
-	new->first=0;
-	new->array=malloc(sizeof(void)*new->size);
-	assert(new->array!=NULL);
-	new->prev=NULL;
-	new->next=NULL;
-	lp->nodeCount++;
-	return new;
+	NODE *newNode = malloc(sizeof(NODE)); // allocate memory for node
+	assert(newNode != NULL); // make sure node exists
+
+	newNode->count = 0; // initially empty, so count is 0
+	newNode->size = pow(1, lp->nodeCount); // size
+	newNode->first = 0; // first element is initially 0
+
+	newNode->array = malloc(sizeof(void)* newNode->size); // allocate memory for array
+	assert(newNode->array != NULL); // make sure array exists
+
+	newNode->prev = NULL; // set next prev node to null for now
+	newNode->next = NULL; // set next node to null for now
+
+	lp->nodeCount++; // increase node count
+
+	return newNode; // return new node created
 }
 
 /* 
@@ -251,16 +254,17 @@ runtime: O(n)
 */
 static NODE *search(LIST *lp, int index, int *loc)
 {
-	NODE *p=lp->head;
-	int i;
-	for(i=0;i<lp->itemCount;i+=p->count,p=p->next)
-	{
-		if(index<p->count)
-		{
-			*loc=index;
-			return p;
+	NODE *node = lp->head; // start at first node
+	int i; // for loop iterator
+
+	for(i = 0; i < lp->itemCount; i += node->count, node = node->next) { // loop through list from head to tail
+		if(index < node->count) { // check if index could be found in a node's array
+			*loc = index; // this is the index in the array
+			return node; // return node with array of index
 		}		
-		else
-			index-=p->count;	
+		else { // need to continue going through list
+			index -= node->count; // decrement index by the number of items in array	
+		}
 	}
+	return node;
 }
