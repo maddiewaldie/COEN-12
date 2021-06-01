@@ -41,19 +41,14 @@ NODE *createNode(LIST *lp)
 {
 	NODE *newNode = malloc(sizeof(NODE)); // allocate memory for node
 	assert(newNode != NULL); // make sure node exists
-
 	newNode->count = 0; // initially empty, so count is 0
 	newNode->size = pow(1, lp->nodeCount); // size
 	newNode->first = 0; // first element is initially 0
-
 	newNode->array = malloc(sizeof(void)* newNode->size); // allocate memory for array
 	assert(newNode->array != NULL); // make sure array exists
-
 	newNode->prev = NULL; // set next prev node to null for now
 	newNode->next = NULL; // set next node to null for now
-
 	lp->nodeCount++; // increase node count
-
 	return newNode; // return new node created
 }
 
