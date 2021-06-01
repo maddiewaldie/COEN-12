@@ -224,11 +224,63 @@ void *findElement(SET *sp, void *elt)
     return found ? sp->data[locn] : NULL;
 }
 
+/*
+ * Function:    quicksort
+ *
+ * Complexity: O(nlogn) best/average case, O(n^2) worst case
+ *
+ * Description: recursively calls quicksort to sort elements in an array pointed to by elts; 
+ * uses the paritition function for sorting on each itteration
+ */
+void quicksort(SET *sp, void**arr,int lo, int hi){
+	assert(arr!=NULL);
+	
+	if(lo< hi){
+		int p = partition(sp,arr,lo,hi); // create a partition
+		quicksort(sp, arr, lo, p-1); // left side of array
+		quicksort(sp, arr, p+1, hi); // right side of array
+		
+	}
+}
+
+/*
+ * Function: partition
+ *
+ * Complexity: O(n) 
+ *
+ * Description: creates a partition; sorts array so left of partition is smaller than partition value and right of partition is larger than partition value
+ */
+int partition(SET *sp,void**arr,int lo, int hi){
+	assert(sp!=NULL);
+
+	void*p = arr[hi]; // set p to highest element
+	int i = lo-1; // set index to lo - 1 for now
+	void*temp; // temporary item to use in for loop
+	int j; // for loop iterator
+
+	for (j = lo; j < hi; j++) {	//go through the dataset
+		//compare the biggest and the pivot
+		if ((*sp->compare)(arr[j], p) <= 0) { // compare the biggest elt & p; if the pivot is smaller, swap
+			i++; // increment i
+			temp = arr[i]; // set temp to array at index i
+			arr[i] = arr[j]; // set array at index i to array at index j
+			arr[j] = temp; // set array at index j to what was previously at index i
+		}
+	}
+
+	//if the pivot is not smaller
+	temp = arr[i+1]; // set temp to array at i + 1
+	arr[i+1] = arr[hi]; // set to highest element
+	arr[hi] = temp; // set to what was in array at i+1
+
+	return (i+1); // return index of the partition location
+}
+
 
 /*
  * Function:	getElements
  *
- * Complexity:	O(m)
+ * Complexity:	O(nlogn) best/average case, O(n^2) worst case
  *
  * Description:	Allocate and return an array of elements in the set pointed
  *		to by SP.
@@ -249,5 +301,6 @@ void *getElements(SET *sp)
 	if (sp->flags[i] == FILLED)
 	    elts[j ++] = sp->data[i];
 
+    quicksort(sp,elts,0,sp->count-1); // added call to qsort
     return elts;
 }
