@@ -225,25 +225,6 @@ void *findElement(SET *sp, void *elt)
 }
 
 /*
- * Function:    quicksort
- *
- * Complexity: O(nlogn) best/average case, O(n^2) worst case
- *
- * Description: recursively calls quicksort to sort elements in an array pointed to by elts; 
- * uses the paritition function for sorting on each itteration
- */
-void quicksort(SET *sp, void**arr,int lo, int hi){
-	assert(arr!=NULL);
-	
-	if(lo< hi){
-		int p = partition(sp,arr,lo,hi); // create a partition
-		quicksort(sp, arr, lo, p-1); // left side of array
-		quicksort(sp, arr, p+1, hi); // right side of array
-		
-	}
-}
-
-/*
  * Function: partition
  *
  * Complexity: O(n) 
@@ -276,6 +257,24 @@ int partition(SET *sp,void**arr,int lo, int hi){
 	return (i+1); // return index of the partition location
 }
 
+/*
+ * Function: quicksort
+ *
+ * Complexity: O(nlogn) best/average case, O(n^2) worst case
+ *
+ * Description: recursively calls quicksort to sort elements in an array pointed to by elts; 
+ * uses the paritition function for sorting on each itteration
+ */
+void quicksort(SET *sp, void**arr,int lo, int hi){
+	assert(arr!=NULL);
+	
+	if(lo< hi){
+		int p = partition(sp,arr,lo,hi); // create a partition
+		quicksort(sp, arr, lo, p-1); // call for left side of array
+		quicksort(sp, arr, p+1, hi); // call for right side of array
+		
+	}
+}
 
 /*
  * Function:	getElements
